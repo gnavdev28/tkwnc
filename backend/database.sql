@@ -95,11 +95,11 @@ CREATE TABLE IF NOT EXISTS `installment_plans` (
 
 -- DỮ LIỆU THỬ NGHIỆM BAN ĐẦU (SEED DATA)
 -- Mật khẩu mặc định cho các tài khoản là '123456' (đã được băm bằng bcrypt)
--- bcrypt hash của '123456' là: $2b$10$wK1VfR94pCstGWhwFh.gKOpR2cO7L6J94tW.cI0qA0RvxXw6dNufe
+-- bcrypt hash của '123456' là: $2b$10$AEZwaBJWxfvbzlstZLkOguGGrp9ngxdnhVqxTWIfGpgYYzkYRdku2
 INSERT INTO `users` (`username`, `password`, `fullname`, `role`) VALUES
-('admin', '$2b$10$wK1VfR94pCstGWhwFh.gKOpR2cO7L6J94tW.cI0qA0RvxXw6dNufe', 'Nguyen Quan Tri', 'admin'),
-('doctor1', '$2b$10$wK1VfR94pCstGWhwFh.gKOpR2cO7L6J94tW.cI0qA0RvxXw6dNufe', 'Bac Si Tran Van A', 'doctor'),
-('staff1', '$2b$10$wK1VfR94pCstGWhwFh.gKOpR2cO7L6J94tW.cI0qA0RvxXw6dNufe', 'Le Thu Ngan', 'staff');
+('admin', '$2b$10$AEZwaBJWxfvbzlstZLkOguGGrp9ngxdnhVqxTWIfGpgYYzkYRdku2', 'Nguyen Quan Tri', 'admin'),
+('doctor1', '$2b$10$AEZwaBJWxfvbzlstZLkOguGGrp9ngxdnhVqxTWIfGpgYYzkYRdku2', 'Bac Si Tran Van A', 'doctor'),
+('staff1', '$2b$10$AEZwaBJWxfvbzlstZLkOguGGrp9ngxdnhVqxTWIfGpgYYzkYRdku2', 'Le Thu Ngan', 'staff');
 
 -- Thêm một số vật tư y tế ban đầu
 INSERT INTO `materials` (`name`, `unit`, `quantity`, `min_quantity`) VALUES
