@@ -8,6 +8,8 @@ function Patients() {
   const [treatments, setTreatments] = useState([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [showTreatmentModal, setShowTreatmentModal] = useState(false)
+  const [availableMaterials, setAvailableMaterials] = useState([]) // Danh sách vật tư có sẵn để chọn
+
 
   // Form state cho thêm bệnh nhân mới
   const [newPatient, setNewPatient] = useState({
@@ -33,6 +35,21 @@ function Patients() {
   useEffect(() => {
     loadPatients()
   }, [])
+
+  // Tải danh sách vật tư từ kho khi mở form tạo bệnh án mới
+  useEffect(() => {
+    if (showTreatmentModal) {
+      api.get('/inventory')
+        .then(res => {
+          if (res.data.success) {
+            // Khởi tạo trạng thái chưa chọn (checked = false) và số lượng mặc định là 1
+            setAvailableMaterials(res.data.materials.map(m => ({ ...m, checked: false, quantity_used: 1 })))
+          }
+        })
+        .catch(err => console.error('Lỗi tải vật tư:', err))
+    }
+  }, [showTreatmentModal])
+
 
   const loadPatients = async () => {
     try {
@@ -92,9 +109,18 @@ function Patients() {
   const handleCreateTreatment = async (e) => {
     e.preventDefault()
     try {
+      // Thu thập thông tin vật tư tiêu hao đã tích chọn
+      const usedMaterials = availableMaterials
+        .filter(m => m.checked)
+        .map(m => ({
+          material_id: m.id,
+          quantity_used: m.quantity_used
+        }))
+
       const payload = {
         ...newTreatment,
-        patient_id: selectedPatient.id
+        patient_id: selectedPatient.id,
+        usedMaterials // Gửi kèm danh sách vật tư đã sử dụng để backend tự động trừ kho
       }
       const res = await api.post('/treatments', payload)
       if (res.data.success) {
@@ -114,6 +140,7 @@ function Patients() {
       alert('Lỗi tạo bệnh án!')
     }
   }
+
 
   // Danh sách 32 răng chuẩn y khoa
   const teethList = [
@@ -300,6 +327,47 @@ function Patients() {
                 <label style={{ fontSize: '13px', fontWeight: 'bold' }}>Ghi chú điều trị</label>
                 <textarea value={newTreatment.notes} onChange={e => setNewTreatment({...newTreatment, notes: e.target.value})} style={{ width: '100%', padding: '8px', marginTop: '4px' }} />
               </div>
+
+              {/* Phần chọn vật tư y tế sử dụng (tự động trừ kho) */}
+              <div>
+                <label style={{ fontSize: '13px', fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>
+                  Vật tư tiêu hao sử dụng (Hệ thống tự động trừ kho)
+                </label>
+                <div style={{ border: '1px solid #cbd5e1', borderRadius: '6px', padding: '10px', maxHeight: '120px', overflowY: 'auto', backgroundColor: '#f8fafc' }}>
+                  {availableMaterials.map((mat, index) => (
+                    <div key={mat.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', userSelect: 'none' }}>
+                        <input 
+                          type="checkbox" 
+                          checked={mat.checked} 
+                          onChange={e => {
+                            const updated = [...availableMaterials]
+                            updated[index].checked = e.target.checked
+                            setAvailableMaterials(updated)
+                          }} 
+                        />
+                        {mat.name} ({mat.unit}) - Tồn: <strong>{mat.quantity}</strong>
+                      </label>
+                      {mat.checked && (
+                        <input 
+                          type="number" 
+                          min="1" 
+                          max={mat.quantity}
+                          value={mat.quantity_used} 
+                          onChange={e => {
+                            const val = Number(e.target.value)
+                            const updated = [...availableMaterials]
+                            updated[index].quantity_used = val > mat.quantity ? mat.quantity : (val < 1 ? 1 : val)
+                            setAvailableMaterials(updated)
+                          }} 
+                          style={{ width: '60px', padding: '2px 4px', border: '1px solid #cbd5e1', borderRadius: '4px' }} 
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
 
               {/* Tích hợp Component Bảng vẽ Chữ ký điện tử Canvas */}
               <SignaturePad onSaveSignature={base64 => setNewTreatment({...newTreatment, signatureBase64: base64})} />

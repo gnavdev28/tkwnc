@@ -8,6 +8,7 @@ const db = require("./config/db")
 const authRoutes = require("./routes/authRoute")
 const patientRoutes = require("./routes/patientRoute")
 const treatmentRoutes = require("./routes/treatmentRoute")
+const inventoryRoutes = require("./routes/inventoryRoute")
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -48,6 +49,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes)
 app.use("/api/patients", patientRoutes)
 app.use("/api/treatments", treatmentRoutes)
+app.use("/api/inventory", inventoryRoutes)
 
 app.get("/", (req, res) => {
     res.send("Hệ thống REST API Quản lý nha khoa đang hoạt động.")

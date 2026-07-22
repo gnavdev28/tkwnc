@@ -1,4 +1,5 @@
 const treatmentModel = require("../models/treatmentModel")
+const inventoryModel = require("../models/inventoryModel")
 const fs = require("fs")
 const path = require("path")
 
@@ -23,7 +24,7 @@ async function getByPatient(req, res) {
 // 2. API tạo bệnh án mới (Tự động lưu ảnh chữ ký từ Canvas và lưu tình trạng răng)
 async function store(req, res) {
     try {
-        const { patient_id, treatment_date, total_cost, notes, tooth_number, condition, signatureBase64 } = req.body
+        const { patient_id, treatment_date, total_cost, notes, tooth_number, condition, signatureBase64, usedMaterials } = req.body
         const doctor_id = req.session.user.id
 
         if (!patient_id || !treatment_date || !tooth_number) {
@@ -68,6 +69,16 @@ async function store(req, res) {
             condition || "healthy",
             notes
         )
+
+        // 3. Tự động trừ số lượng vật tư y tế trong kho và lưu vào bảng sử dụng vật tư
+        if (usedMaterials && Array.isArray(usedMaterials)) {
+            for (let item of usedMaterials) {
+                if (item.material_id && item.quantity_used > 0) {
+                    await inventoryModel.deductMaterialQuantity(item.material_id, item.quantity_used)
+                    await inventoryModel.logTreatmentMaterial(treatmentId, item.material_id, item.quantity_used)
+                }
+            }
+        }
 
         res.status(201).json({
             success: true,
