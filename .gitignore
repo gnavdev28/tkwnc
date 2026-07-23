@@ -22,3 +22,7 @@ build/
 # Các file upload của hệ thống (Chứa chữ ký bệnh nhân)
 backend/uploads/*
 !backend/uploads/.gitkeep
+
+# Thư mục cache và đóng gói của Vite
+.vite/
+frontend/.vite/
