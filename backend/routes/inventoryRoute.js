@@ -5,6 +5,7 @@ const { requireLogin, requireRoles } = require("../middlewares/authMiddleware")
 
 // Các API quản lý kho vật tư
 router.get("/", requireLogin, inventoryController.index)
+router.post("/", requireLogin, requireRoles(["admin"]), inventoryController.store)
 
 // Chỉ có Admin hoặc Nhân viên trực quầy mới có quyền cập nhật nhập thêm kho vật tư
 router.put("/:id", requireLogin, requireRoles(["admin", "staff"]), inventoryController.update)

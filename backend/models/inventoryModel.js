@@ -41,10 +41,19 @@ async function logTreatmentMaterial(treatmentId, materialId, quantityUsed) {
     )
 }
 
+async function createMaterial(name, unit, quantity, min_quantity) {
+    const [result] = await db.query(
+        "INSERT INTO materials (name, unit, quantity, min_quantity) VALUES (?, ?, ?, ?)",
+        [name, unit, quantity, min_quantity]
+    )
+    return result.insertId
+}
+
 module.exports = {
     getAllMaterials,
     getMaterialById,
     updateMaterial,
     deductMaterialQuantity,
-    logTreatmentMaterial
+    logTreatmentMaterial,
+    createMaterial
 }
