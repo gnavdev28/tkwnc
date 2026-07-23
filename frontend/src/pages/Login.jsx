@@ -5,26 +5,44 @@ import api from '../api'
 function Login({ onLogin }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [otp, setOtp] = useState('')
   const [error, setError] = useState('')
+  const [require2FA, setRequire2FA] = useState(false)
   const navigate = useNavigate()
 
-  // Xử lý khi nhấn nút Đăng nhập
   const handleLogin = async (e) => {
     e.preventDefault()
     setError('')
     try {
-      // Gửi tài khoản + mật khẩu lên Express Backend bằng Axios
       const response = await api.post('/auth/login', { username, password })
       const result = response.data
       
       if (result.success) {
-        // Lưu thông tin người dùng vào App State và chuyển vào trang Dashboard
+        if (result.require2FA) {
+          setRequire2FA(true)
+        } else {
+          onLogin(result.user)
+          navigate('/dashboard')
+        }
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Đăng nhập thất bại.')
+    }
+  }
+
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault()
+    setError('')
+    try {
+      const response = await api.post('/auth/2fa/verify', { token: otp })
+      const result = response.data
+      
+      if (result.success) {
         onLogin(result.user)
         navigate('/dashboard')
       }
     } catch (err) {
-      // Hiển thị lỗi nếu sai tài khoản hoặc mật khẩu
-      setError(err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại tài khoản.')
+      setError(err.response?.data?.message || 'Mã OTP không hợp lệ.')
     }
   }
 
@@ -42,7 +60,7 @@ function Login({ onLogin }) {
     }}>
       <h2 style={{ color: '#1e3a8a', marginBottom: '10px' }}>🦷 Hệ thống Nha Khoa</h2>
       <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '25px' }}>
-        Đăng nhập vào hệ thống quản lý phòng khám
+        {require2FA ? 'Xác thực bảo mật OTP 2FA' : 'Đăng nhập vào hệ thống quản lý phòng khám'}
       </p>
 
       {error && (
@@ -60,63 +78,124 @@ function Login({ onLogin }) {
         </div>
       )}
 
-      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '15px', textAlign: 'left' }}>
-        <div>
-          <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '5px', color: '#334155' }}>
-            Tên đăng nhập
-          </label>
-          <input 
-            type="text" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
-            required
-            style={{
-              width: '100%',
-              padding: '10px',
-              border: '1px solid #cbd5e1',
-              borderRadius: '4px',
-              boxSizing: 'border-box'
-            }}
-          />
-        </div>
+      {!require2FA ? (
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '15px', textAlign: 'left' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '5px', color: '#334155' }}>
+              Tên đăng nhập
+            </label>
+            <input 
+              type="text" 
+              value={username} 
+              onChange={(e) => setUsername(e.target.value)} 
+              required
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #cbd5e1',
+                borderRadius: '4px',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
 
-        <div>
-          <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '5px', color: '#334155' }}>
-            Mật khẩu
-          </label>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required
-            style={{
-              width: '100%',
-              padding: '10px',
-              border: '1px solid #cbd5e1',
-              borderRadius: '4px',
-              boxSizing: 'border-box'
-            }}
-          />
-        </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '5px', color: '#334155' }}>
+              Mật khẩu
+            </label>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              required
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #cbd5e1',
+                borderRadius: '4px',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
 
-        <button 
-          type="submit"
-          style={{
-            marginTop: '10px',
-            padding: '12px',
-            backgroundColor: '#1e3a8a',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            fontSize: '16px',
-            transition: 'background-color 0.2s'
-          }}
-        >
-          Đăng nhập
-        </button>
-      </form>
+          <button 
+            type="submit"
+            style={{
+              marginTop: '10px',
+              padding: '12px',
+              backgroundColor: '#1e3a8a',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '16px'
+            }}
+          >
+            Đăng nhập
+          </button>
+        </form>
+      ) : (
+        <form onSubmit={handleVerifyOTP} style={{ display: 'flex', flexDirection: 'column', gap: '15px', textAlign: 'left' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '5px', color: '#334155' }}>
+              Nhập mã OTP 6 số
+            </label>
+            <input 
+              type="text" 
+              maxLength="6"
+              value={otp} 
+              onChange={(e) => setOtp(e.target.value)} 
+              placeholder="000000"
+              required
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #cbd5e1',
+                borderRadius: '4px',
+                boxSizing: 'border-box',
+                letterSpacing: '5px',
+                textAlign: 'center',
+                fontSize: '18px',
+                fontWeight: 'bold'
+              }}
+            />
+          </div>
+
+          <button 
+            type="submit"
+            style={{
+              marginTop: '10px',
+              padding: '12px',
+              backgroundColor: '#10b981',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '16px'
+            }}
+          >
+            Xác minh OTP
+          </button>
+          
+          <button 
+            type="button" 
+            onClick={() => setRequire2FA(false)}
+            style={{
+              backgroundColor: 'transparent',
+              color: '#64748b',
+              border: 'none',
+              cursor: 'pointer',
+              textAlign: 'center',
+              fontSize: '14px',
+              textDecoration: 'underline'
+            }}
+          >
+            Quay lại
+          </button>
+        </form>
+      )}
     </div>
   )
 }

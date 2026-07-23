@@ -27,8 +27,17 @@ async function verifyPassword(plainPassword, hashedPassword) {
     return await bcrypt.compare(plainPassword, hashedPassword)
 }
 
+// 4. Cập nhật khóa bí mật và trạng thái bật/tắt 2FA của tài khoản
+async function update2FASecret(userId, secret, enabled) {
+    await db.query(
+        "UPDATE users SET twofa_secret = ?, twofa_enabled = ? WHERE id = ?",
+        [secret, enabled, userId]
+    )
+}
+
 module.exports = {
     findUserByUsername,
     createUser,
-    verifyPassword
+    verifyPassword,
+    update2FASecret
 }
