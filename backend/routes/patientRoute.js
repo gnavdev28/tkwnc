@@ -7,6 +7,7 @@ const { requireLogin } = require("../middlewares/authMiddleware")
 router.get("/", requireLogin, patientController.index)
 router.get("/:id", requireLogin, patientController.show)
 router.post("/", requireLogin, patientController.store)
+router.put("/:id", requireLogin, patientController.update)
 router.delete("/:id", requireLogin, patientController.destroy)
 
 module.exports = router

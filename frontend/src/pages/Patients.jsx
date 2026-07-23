@@ -8,10 +8,9 @@ function Patients() {
   const [treatments, setTreatments] = useState([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [showTreatmentModal, setShowTreatmentModal] = useState(false)
-  const [availableMaterials, setAvailableMaterials] = useState([]) // Danh sách vật tư có sẵn để chọn
+  const [editingPatient, setEditingPatient] = useState(null)
+  const [availableMaterials, setAvailableMaterials] = useState([])
 
-
-  // Form state cho thêm bệnh nhân mới
   const [newPatient, setNewPatient] = useState({
     fullname: '',
     phone: '',
@@ -21,7 +20,6 @@ function Patients() {
     address: ''
   })
 
-  // Form state cho tạo bệnh án mới
   const [newTreatment, setNewTreatment] = useState({
     treatment_date: new Date().toISOString().split('T')[0],
     tooth_number: '11',
@@ -31,25 +29,21 @@ function Patients() {
     signatureBase64: ''
   })
 
-  // Tải danh sách bệnh nhân từ backend
   useEffect(() => {
     loadPatients()
   }, [])
 
-  // Tải danh sách vật tư từ kho khi mở form tạo bệnh án mới
   useEffect(() => {
     if (showTreatmentModal) {
       api.get('/inventory')
         .then(res => {
           if (res.data.success) {
-            // Khởi tạo trạng thái chưa chọn (checked = false) và số lượng mặc định là 1
             setAvailableMaterials(res.data.materials.map(m => ({ ...m, checked: false, quantity_used: 1 })))
           }
         })
-        .catch(err => console.error('Lỗi tải vật tư:', err))
+        .catch(err => console.error(err))
     }
   }, [showTreatmentModal])
-
 
   const loadPatients = async () => {
     try {
@@ -62,7 +56,6 @@ function Patients() {
     }
   }
 
-  // Tải lịch sử bệnh án khi chọn một bệnh nhân
   const loadTreatments = async (patientId) => {
     try {
       const res = await api.get(`/treatments/patient/${patientId}`)
@@ -74,7 +67,6 @@ function Patients() {
     }
   }
 
-  // Xử lý tạo bệnh nhân mới
   const handleCreatePatient = async (e) => {
     e.preventDefault()
     try {
@@ -90,7 +82,20 @@ function Patients() {
     }
   }
 
-  // Xử lý xóa bệnh nhân
+  const handleUpdatePatient = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await api.put(`/patients/${editingPatient.id}`, editingPatient)
+      if (res.data.success) {
+        alert('Cập nhật bệnh nhân thành công!')
+        setEditingPatient(null)
+        loadPatients()
+      }
+    } catch (err) {
+      alert('Lỗi cập nhật bệnh nhân!')
+    }
+  }
+
   const handleDeletePatient = async (id) => {
     if (!window.confirm('Bạn có chắc muốn xóa bệnh nhân này?')) return
     try {
@@ -105,11 +110,9 @@ function Patients() {
     }
   }
 
-  // Xử lý tạo bệnh án mới
   const handleCreateTreatment = async (e) => {
     e.preventDefault()
     try {
-      // Thu thập thông tin vật tư tiêu hao đã tích chọn
       const usedMaterials = availableMaterials
         .filter(m => m.checked)
         .map(m => ({
@@ -120,7 +123,7 @@ function Patients() {
       const payload = {
         ...newTreatment,
         patient_id: selectedPatient.id,
-        usedMaterials // Gửi kèm danh sách vật tư đã sử dụng để backend tự động trừ kho
+        usedMaterials
       }
       const res = await api.post('/treatments', payload)
       if (res.data.success) {
@@ -141,8 +144,6 @@ function Patients() {
     }
   }
 
-
-  // Danh sách 32 răng chuẩn y khoa
   const teethList = [
     18,17,16,15,14,13,12,11, 21,22,23,24,25,26,27,28,
     48,47,46,45,44,43,42,41, 31,32,33,34,35,36,37,38
@@ -170,7 +171,6 @@ function Patients() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: selectedPatient ? '1fr 1fr' : '1fr', gap: '20px' }}>
-        {/* Cột 1: Danh sách Bệnh nhân */}
         <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
           <h3>Danh sách Bệnh nhân ({patients.length})</h3>
           <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
@@ -196,6 +196,17 @@ function Patients() {
                       Bệnh án
                     </button>
                     <button 
+                      onClick={() => {
+                        setEditingPatient({
+                          ...p,
+                          dob: p.dob ? p.dob.split('T')[0] : ''
+                        })
+                      }} 
+                      style={{ padding: '4px 8px', backgroundColor: '#e2e8f0', color: '#1e293b', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}
+                    >
+                      Sửa
+                    </button>
+                    <button 
                       onClick={() => handleDeletePatient(p.id)} 
                       style={{ padding: '4px 8px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}
                     >
@@ -208,7 +219,6 @@ function Patients() {
           </table>
         </div>
 
-        {/* Cột 2: Chi tiết Bệnh án của Bệnh nhân được chọn */}
         {selectedPatient && (
           <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -233,7 +243,6 @@ function Patients() {
                     </div>
                     <div style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>Bác sĩ phụ trách: {t.doctor_name}</div>
                     
-                    {/* Chi tiết răng */}
                     <div style={{ marginTop: '10px', backgroundColor: 'white', padding: '10px', borderRadius: '4px', border: '1px solid #e2e8f0' }}>
                       <strong>Chi tiết điều trị:</strong>
                       {t.teeth?.map(item => (
@@ -244,7 +253,6 @@ function Patients() {
                       {t.notes && <div style={{ fontSize: '13px', fontStyle: 'italic', marginTop: '5px' }}>Ghi chú: {t.notes}</div>}
                     </div>
 
-                    {/* Hiển thị Chữ ký điện tử nếu có */}
                     {t.signature_path && (
                       <div style={{ marginTop: '10px' }}>
                         <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#475569' }}>Chữ ký cam kết của bệnh nhân:</span> <br/>
@@ -263,7 +271,6 @@ function Patients() {
         )}
       </div>
 
-      {/* Modal Thêm Bệnh Nhân mới */}
       {showAddModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ backgroundColor: 'white', padding: '25px', borderRadius: '8px', width: '400px' }}>
@@ -287,94 +294,120 @@ function Patients() {
         </div>
       )}
 
-      {/* Modal Thêm Ca Điều Trị (Bệnh án) mới */}
-      {showTreatmentModal && (
+      {editingPatient && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ backgroundColor: 'white', padding: '25px', borderRadius: '8px', width: '500px', maxHeight: '90vh', overflowY: 'auto' }}>
-            <h3>Tạo Hồ sơ Bệnh án mới: {selectedPatient?.fullname}</h3>
-            <form onSubmit={handleCreateTreatment} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 'bold' }}>Ngày khám *</label>
-                <input type="date" value={newTreatment.treatment_date} onChange={e => setNewTreatment({...newTreatment, treatment_date: e.target.value})} required style={{ width: '100%', padding: '8px', marginTop: '4px' }} />
+          <div style={{ backgroundColor: 'white', padding: '25px', borderRadius: '8px', width: '400px' }}>
+            <h3>Sửa thông tin Bệnh nhân</h3>
+            <form onSubmit={handleUpdatePatient} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <input type="text" placeholder="Họ và tên *" value={editingPatient.fullname} onChange={e => setEditingPatient({...editingPatient, fullname: e.target.value})} required style={{ padding: '8px' }} />
+              <input type="text" placeholder="Số điện thoại *" value={editingPatient.phone} onChange={e => setEditingPatient({...editingPatient, phone: e.target.value})} required style={{ padding: '8px' }} />
+              <input type="email" placeholder="Email" value={editingPatient.email || ''} onChange={e => setEditingPatient({...editingPatient, email: e.target.value})} style={{ padding: '8px' }} />
+              <input type="date" placeholder="Ngày sinh *" value={editingPatient.dob} onChange={e => setEditingPatient({...editingPatient, dob: e.target.value})} required style={{ padding: '8px' }} />
+              <select value={editingPatient.gender} onChange={e => setEditingPatient({...editingPatient, gender: e.target.value})} style={{ padding: '8px' }}>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+              </select>
+              <textarea placeholder="Địa chỉ" value={editingPatient.address || ''} onChange={e => setEditingPatient({...editingPatient, address: e.target.value})} style={{ padding: '8px' }} />
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setEditingPatient(null)} style={{ padding: '8px 15px' }}>Hủy</button>
+                <button type="submit" style={{ padding: '8px 15px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px' }}>Cập nhật</button>
               </div>
+            </form>
+          </div>
+        </div>
+      )}
 
+      {showTreatmentModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
+          <div style={{ backgroundColor: 'white', padding: '25px', borderRadius: '8px', width: '550px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <h3>Tạo hồ sơ Bệnh án điều trị mới</h3>
+            <form onSubmit={handleCreateTreatment} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 'bold' }}>Số hiệu răng *</label>
-                <select value={newTreatment.tooth_number} onChange={e => setNewTreatment({...newTreatment, tooth_number: e.target.value})} style={{ width: '100%', padding: '8px', marginTop: '4px' }}>
-                  {teethList.map(num => (
-                    <option key={num} value={num}>Răng số {num}</option>
-                  ))}
-                </select>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px' }}>Ngày điều trị</label>
+                <input type="date" value={newTreatment.treatment_date} onChange={e => setNewTreatment({...newTreatment, treatment_date: e.target.value})} required style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }} />
               </div>
-
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 'bold' }}>Tình trạng điều trị *</label>
-                <select value={newTreatment.condition} onChange={e => setNewTreatment({...newTreatment, condition: e.target.value})} style={{ width: '100%', padding: '8px', marginTop: '4px' }}>
-                  <option value="decayed">Sâu răng</option>
-                  <option value="filled">Trám răng</option>
-                  <option value="missing">Đã nhổ răng</option>
-                  <option value="crown">Bọc mão sứ</option>
-                  <option value="implant">Cấy ghép Implant</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 'bold' }}>Chi phí điều trị (VNĐ)</label>
-                <input type="number" placeholder="0" value={newTreatment.total_cost} onChange={e => setNewTreatment({...newTreatment, total_cost: e.target.value})} style={{ width: '100%', padding: '8px', marginTop: '4px' }} />
-              </div>
-
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 'bold' }}>Ghi chú điều trị</label>
-                <textarea value={newTreatment.notes} onChange={e => setNewTreatment({...newTreatment, notes: e.target.value})} style={{ width: '100%', padding: '8px', marginTop: '4px' }} />
-              </div>
-
-              {/* Phần chọn vật tư y tế sử dụng (tự động trừ kho) */}
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>
-                  Vật tư tiêu hao sử dụng (Hệ thống tự động trừ kho)
-                </label>
-                <div style={{ border: '1px solid #cbd5e1', borderRadius: '6px', padding: '10px', maxHeight: '120px', overflowY: 'auto', backgroundColor: '#f8fafc' }}>
-                  {availableMaterials.map((mat, index) => (
-                    <div key={mat.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px' }}>
-                      <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', userSelect: 'none' }}>
-                        <input 
-                          type="checkbox" 
-                          checked={mat.checked} 
-                          onChange={e => {
-                            const updated = [...availableMaterials]
-                            updated[index].checked = e.target.checked
-                            setAvailableMaterials(updated)
-                          }} 
-                        />
-                        {mat.name} ({mat.unit}) - Tồn: <strong>{mat.quantity}</strong>
-                      </label>
-                      {mat.checked && (
-                        <input 
-                          type="number" 
-                          min="1" 
-                          max={mat.quantity}
-                          value={mat.quantity_used} 
-                          onChange={e => {
-                            const val = Number(e.target.value)
-                            const updated = [...availableMaterials]
-                            updated[index].quantity_used = val > mat.quantity ? mat.quantity : (val < 1 ? 1 : val)
-                            setAvailableMaterials(updated)
-                          }} 
-                          style={{ width: '60px', padding: '2px 4px', border: '1px solid #cbd5e1', borderRadius: '4px' }} 
-                        />
-                      )}
-                    </div>
-                  ))}
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px' }}>Chọn Răng điều trị</label>
+                  <select value={newTreatment.tooth_number} onChange={e => setNewTreatment({...newTreatment, tooth_number: e.target.value})} style={{ width: '100%', padding: '8px' }}>
+                    {teethList.map(t => (
+                      <option key={t} value={t}>Răng {t}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px' }}>Bệnh lý / Thủ thuật</label>
+                  <select value={newTreatment.condition} onChange={e => setNewTreatment({...newTreatment, condition: e.target.value})} style={{ width: '100%', padding: '8px' }}>
+                    <option value="decayed">Sâu răng</option>
+                    <option value="missing">Đã nhổ răng</option>
+                    <option value="filled">Trám răng</option>
+                    <option value="crown">Bọc mão sứ</option>
+                    <option value="implant">Cấy ghép Implant</option>
+                  </select>
                 </div>
               </div>
 
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px' }}>Tổng chi phí điều trị (VNĐ)</label>
+                <input type="number" placeholder="Ví dụ: 2000000" value={newTreatment.total_cost} onChange={e => setNewTreatment({...newTreatment, total_cost: e.target.value})} required style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }} />
+              </div>
 
-              {/* Tích hợp Component Bảng vẽ Chữ ký điện tử Canvas */}
-              <SignaturePad onSaveSignature={base64 => setNewTreatment({...newTreatment, signatureBase64: base64})} />
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px' }}>Vật tư tiêu hao sử dụng</label>
+                <div style={{ border: '1px solid #cbd5e1', borderRadius: '4px', padding: '10px', maxHeight: '120px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {availableMaterials.length === 0 ? (
+                    <span style={{ fontSize: '13px', color: '#64748b' }}>Không tìm thấy vật tư trong kho.</span>
+                  ) : (
+                    availableMaterials.map((m, idx) => (
+                      <div key={m.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <label style={{ fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          <input 
+                            type="checkbox" 
+                            checked={m.checked} 
+                            onChange={e => {
+                              const updated = [...availableMaterials]
+                              updated[idx].checked = e.target.checked
+                              setAvailableMaterials(updated)
+                            }}
+                          />
+                          {m.name} ({m.unit})
+                        </label>
+                        {m.checked && (
+                          <input 
+                            type="number" 
+                            min="1" 
+                            max={m.quantity}
+                            value={m.quantity_used}
+                            onChange={e => {
+                              const updated = [...availableMaterials]
+                              updated[idx].quantity_used = Number(e.target.value)
+                              setAvailableMaterials(updated)
+                            }}
+                            style={{ width: '60px', padding: '3px', fontSize: '12px' }}
+                          />
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '15px' }}>
-                <button type="button" onClick={() => setShowTreatmentModal(false)} style={{ padding: '8px 15px' }}>Hủy</button>
-                <button type="submit" style={{ padding: '8px 15px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold' }}>Lưu Bệnh án</button>
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px' }}>Ghi chú điều trị</label>
+                <textarea rows="2" placeholder="Tình trạng răng miệng..." value={newTreatment.notes} onChange={e => setNewTreatment({...newTreatment, notes: e.target.value})} style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px' }}>Chữ ký cam kết của bệnh nhân (Vẽ bằng chuột/tay)</label>
+                <div style={{ border: '1px solid #cbd5e1', borderRadius: '4px', backgroundColor: '#f8fafc' }}>
+                  <SignaturePad onSave={(base64) => setNewTreatment({...newTreatment, signatureBase64: base64})} />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" onClick={() => setShowTreatmentModal(false)} style={{ padding: '10px 18px' }}>Hủy</button>
+                <button type="submit" style={{ padding: '10px 18px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold' }}>Lưu bệnh án</button>
               </div>
             </form>
           </div>

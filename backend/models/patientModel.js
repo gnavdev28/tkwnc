@@ -34,9 +34,17 @@ async function deletePatient(id) {
     )
 }
 
+async function updatePatient(id, fullname, phone, email, dob, gender, address) {
+    await db.query(
+        "UPDATE patients SET fullname = ?, phone = ?, email = ?, dob = ?, gender = ?, address = ? WHERE id = ?",
+        [fullname, phone, email, dob, gender, address, id]
+    )
+}
+
 module.exports = {
     getAllPatients,
     getPatientById,
     createPatient,
-    deletePatient
+    deletePatient,
+    updatePatient
 }
