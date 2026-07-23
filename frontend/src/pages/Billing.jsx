@@ -86,7 +86,7 @@ function Billing() {
     <div style={{ maxWidth: '1100px', margin: '0 auto', fontFamily: 'sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <div>
-          <h2>💰 Quản lý Doanh thu & Trả góp bệnh nhân</h2>
+          <h2>Quản lý Doanh thu & Trả góp bệnh nhân</h2>
           <p style={{ color: '#64748b', margin: 0 }}>Quản lý hóa đơn điều trị và các đợt thu tiền trả góp</p>
         </div>
         <button 
@@ -105,7 +105,7 @@ function Billing() {
             gap: '8px'
           }}
         >
-          📥 Xuất Báo Cáo Excel (.xlsx)
+          Xuất Báo Cáo Excel (.xlsx)
         </button>
       </div>
 
@@ -173,7 +173,7 @@ function Billing() {
                   onClick={() => setShowPayModal(true)}
                   style={{ padding: '6px 12px', backgroundColor: '#e0f2fe', color: '#0369a1', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}
                 >
-                  💵 Thu tiền đợt mới
+                  Thu tiền đợt mới
                 </button>
               )}
             </div>

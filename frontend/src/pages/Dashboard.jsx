@@ -103,7 +103,7 @@ function Dashboard({ user, onUserUpdate }) {
 
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-      <h2 style={{ marginBottom: '20px', color: '#1e3a8a' }}>📊 Tổng quan hoạt động Phòng khám Nha khoa</h2>
+      <h2 style={{ marginBottom: '20px', color: '#1e3a8a' }}>Tổng quan hoạt động Phòng khám Nha khoa</h2>
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '30px' }}>
         <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
@@ -135,10 +135,10 @@ function Dashboard({ user, onUserUpdate }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px' }}>
         <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-          <h3>⚠️ Cảnh báo kho vật tư (Hết hàng hoặc tồn kho thấp)</h3>
+          <h3>Cảnh báo kho vật tư (Hết hàng hoặc tồn kho thấp)</h3>
           {stats.lowStockItems.length === 0 ? (
             <p style={{ color: '#15803d', fontSize: '14px', marginTop: '15px', fontWeight: 'bold' }}>
-              ✓ Kho y tế ở trạng thái an toàn, không có vật tư nào dưới ngưỡng tối thiểu.
+              Kho y tế ở trạng thái an toàn, không có vật tư nào dưới ngưỡng tối thiểu.
             </p>
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '15px' }}>
@@ -164,7 +164,7 @@ function Dashboard({ user, onUserUpdate }) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ backgroundColor: '#eff6ff', padding: '20px', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
-            <h3 style={{ color: '#1e3a8a', margin: '0 0 15px 0' }}>💡 Quy trình nghiệp vụ:</h3>
+            <h3 style={{ color: '#1e3a8a', margin: '0 0 15px 0' }}>Quy trình nghiệp vụ:</h3>
             <ul style={{ fontSize: '14px', lineHeight: '22px', paddingLeft: '20px', color: '#1e3a8a' }}>
               <li style={{ marginBottom: '8px' }}>
                 <strong>Bước 1:</strong> Thêm thông tin hành chính bệnh nhân mới ở tab <strong>Bệnh nhân</strong>.
@@ -182,12 +182,12 @@ function Dashboard({ user, onUserUpdate }) {
           </div>
 
           <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-            <h3 style={{ color: '#1e3a8a', margin: '0 0 15px 0' }}>🔐 Bảo mật tài khoản 2 lớp (2FA)</h3>
+            <h3 style={{ color: '#1e3a8a', margin: '0 0 15px 0' }}>Bảo mật tài khoản 2 lớp (2FA)</h3>
             {error2FA && <p style={{ color: 'red', fontSize: '13px' }}>{error2FA}</p>}
             
             {user?.twofa_enabled ? (
               <div>
-                <p style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '14px' }}>✓ Trạng thái: ĐÃ BẬT BẢO MẬT 2 LỚP</p>
+                <p style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '14px' }}>Trạng thái: ĐÃ BẬT BẢO MẬT 2 LỚP</p>
                 <button 
                   onClick={handleDisable2FA} 
                   style={{ width: '100%', padding: '10px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
@@ -197,7 +197,7 @@ function Dashboard({ user, onUserUpdate }) {
               </div>
             ) : (
               <div>
-                <p style={{ color: '#ea580c', fontWeight: 'bold', fontSize: '14px' }}>✗ Trạng thái: CHƯA BẬT BẢO MẬT 2 LỚP</p>
+                <p style={{ color: '#ea580c', fontWeight: 'bold', fontSize: '14px' }}>Trạng thái: CHƯA BẬT BẢO MẬT 2 LỚP</p>
                 {!temp2FA ? (
                   <button 
                     onClick={handleInit2FA} 

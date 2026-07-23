@@ -49,7 +49,7 @@ function App() {
         {/* Thanh điều hướng (Navbar) hiển thị khi đã đăng nhập */}
         {user && (
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', backgroundColor: '#1e3a8a', color: 'white' }}>
-            <h2 style={{ margin: 0 }}>🦷 Nha Khoa</h2>
+            <h2 style={{ margin: 0 }}>Nha Khoa</h2>
             <nav style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
               <Link to="/dashboard" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>Dashboard</Link>
               <Link to="/patients" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>Bệnh nhân</Link>

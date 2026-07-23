@@ -160,7 +160,7 @@ function Patients() {
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', fontFamily: 'sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2>📋 Quản lý Bệnh nhân & Hồ sơ Bệnh án</h2>
+        <h2>Quản lý Bệnh nhân & Hồ sơ Bệnh án</h2>
         <button 
           onClick={() => setShowAddModal(true)} 
           style={{ padding: '10px 15px', backgroundColor: '#10b981', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}

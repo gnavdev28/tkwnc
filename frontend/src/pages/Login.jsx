@@ -58,7 +58,7 @@ function Login({ onLogin }) {
       textAlign: 'center',
       fontFamily: 'sans-serif'
     }}>
-      <h2 style={{ color: '#1e3a8a', marginBottom: '10px' }}>🦷 Hệ thống Nha Khoa</h2>
+      <h2 style={{ color: '#1e3a8a', marginBottom: '10px' }}>Hệ thống Nha Khoa</h2>
       <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '25px' }}>
         {require2FA ? 'Xác thực bảo mật OTP 2FA' : 'Đăng nhập vào hệ thống quản lý phòng khám'}
       </p>

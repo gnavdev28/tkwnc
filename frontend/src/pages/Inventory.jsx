@@ -45,7 +45,7 @@ function Inventory() {
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto', fontFamily: 'sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2>📦 Quản lý Kho vật tư tiêu hao</h2>
+        <h2>Quản lý Kho vật tư tiêu hao</h2>
         <p style={{ color: '#64748b', margin: 0 }}>Theo dõi số lượng thuốc, kim tiêm, vật tư nha khoa thực tế</p>
       </div>
 
@@ -75,7 +75,7 @@ function Inventory() {
                   <td style={{ padding: '12px', textAlign: 'center' }}>
                     {isLowStock ? (
                       <span style={{ backgroundColor: '#fee2e2', color: '#ef4444', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' }}>
-                        ⚠️ CẦN NHẬP KHO
+                        CẦN NHẬP KHO
                       </span>
                     ) : (
                       <span style={{ backgroundColor: '#dcfce7', color: '#15803d', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' }}>
