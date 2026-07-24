@@ -26,3 +26,6 @@ backend/uploads/*
 # Thư mục cache và đóng gói của Vite
 .vite/
 frontend/.vite/
+
+# Tài liệu vấn đáp cá nhân
+HUONG_DAN_VAN_DAP_CODE.md
