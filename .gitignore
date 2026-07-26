@@ -29,3 +29,8 @@ frontend/.vite/
 
 # Tài liệu vấn đáp cá nhân
 HUONG_DAN_VAN_DAP_CODE.md
+
+# Báo cáo Word và ảnh minh họa
+Báo_Cáo_Mã_Nguồn.docx
+images_report/
+backend/generate_report.js
