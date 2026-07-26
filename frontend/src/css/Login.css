@@ -1,0 +1,95 @@
+.khung-dang-nhap {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 30px;
+  background-color: white;
+  border: 1px solid #cbd5e1;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.tieu-de-logo {
+  color: #1e3a8a;
+  margin-bottom: 10px;
+}
+
+.dong-mo-ta-phu {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.hop-thong-bao-loi {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #ef4444;
+  padding: 10px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-dang-nhap {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+}
+
+.nhan-o-nhap {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #334155;
+}
+
+.o-nhap-lieu-thuong {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  box-sizing: border-box;
+}
+
+.nut-bam-xac-nhan {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #1e3a8a;
+  color: white;
+  border: 1px solid #1e3a8a;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.o-nhap-otp-to {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  box-sizing: border-box;
+  letter-spacing: 5px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.nut-bam-xac-minh-otp {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #10b981;
+  color: white;
+  border: 1px solid #10b981;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.nut-quay-lai-dang-nhap {
+  background-color: transparent;
+  color: #64748b;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  text-decoration: underline;
+}

@@ -1,0 +1,62 @@
+.chu-dang-tai-du-lieu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: sans-serif;
+}
+
+.khung-layout-chinh {
+  font-family: sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.thanh-dau-trang-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #1e3a8a;
+  color: white;
+}
+
+.tieu-de-navbar {
+  margin: 0;
+}
+
+.thanh-dieu-huong-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.duong-dan-menu {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.duong-dan-menu:hover {
+  color: #93c5fd;
+}
+
+.chu-chao-ten-bac-si {
+  margin-left: 10px;
+  color: #93c5fd;
+}
+
+.nut-dang-xuat {
+  padding: 6px 12px;
+  border: 1px solid #dc2626;
+  background-color: #ef4444;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.khung-chua-noi-dung {
+  flex: 1;
+  padding: 20px;
+}

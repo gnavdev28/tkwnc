@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom'
 import api from './api'
+import './css/App.css'
 
-// Import các trang rỗng để định tuyến
+// Import các trang chính
 import Login from './pages/Login.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Patients from './pages/Patients.jsx'
@@ -40,29 +41,29 @@ function App() {
   }
 
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontFamily: 'sans-serif' }}>Đang tải dữ liệu...</div>
+    return <div className="chu-dang-tai-du-lieu">Đang tải dữ liệu...</div>
   }
 
   return (
     <Router>
-      <div style={{ fontFamily: 'sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="khung-layout-chinh">
         {/* Thanh điều hướng (Navbar) hiển thị khi đã đăng nhập */}
         {user && (
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', backgroundColor: '#1e3a8a', color: 'white' }}>
-            <h2 style={{ margin: 0 }}>Nha Khoa</h2>
-            <nav style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-              <Link to="/dashboard" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>Dashboard</Link>
-              <Link to="/patients" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>Bệnh nhân</Link>
-              <Link to="/inventory" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>Kho vật tư</Link>
-              <Link to="/billing" style={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}>Doanh thu & Trả góp</Link>
-              <span style={{ marginLeft: '10px', color: '#93c5fd' }}>Xin chào, {user.fullname} ({user.role})</span>
-              <button onClick={handleLogout} style={{ padding: '6px 12px', border: 'none', backgroundColor: '#ef4444', color: 'white', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Đăng xuất</button>
+          <header className="thanh-dau-trang-navbar">
+            <h2 className="tieu-de-navbar">Nha Khoa</h2>
+            <nav className="thanh-dieu-huong-links">
+              <Link to="/dashboard" className="duong-dan-menu">Dashboard</Link>
+              <Link to="/patients" className="duong-dan-menu">Bệnh nhân</Link>
+              <Link to="/inventory" className="duong-dan-menu">Kho vật tư</Link>
+              <Link to="/billing" className="duong-dan-menu">Doanh thu & Trả góp</Link>
+              <span className="chu-chao-ten-bac-si">Xin chào, {user.fullname} ({user.role})</span>
+              <button onClick={handleLogout} className="nut-dang-xuat">Đăng xuất</button>
             </nav>
           </header>
         )}
 
         {/* Nội dung các trang */}
-        <main style={{ flex: 1, padding: '20px' }}>
+        <main className="khung-chua-noi-dung">
           <Routes>
             <Route 
               path="/login" 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import api from '../api'
+import '../css/Billing.css'
 
 function Billing() {
   const [billings, setBillings] = useState([])
@@ -83,75 +84,61 @@ function Billing() {
   }
 
   return (
-    <div style={{ maxWidth: '1100px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+    <div className="khung-doanh-thu">
+      <div className="tieu-de-doanh-thu">
         <div>
-          <h2>Quản lý Doanh thu & Trả góp bệnh nhân</h2>
-          <p style={{ color: '#64748b', margin: 0 }}>Quản lý hóa đơn điều trị và các đợt thu tiền trả góp</p>
+          <h2 className="tieu-de-doanh-thu-text">Quản lý Doanh thu & Trả góp bệnh nhân</h2>
+          <p className="tieu-de-doanh-thu-desc">Quản lý hóa đơn điều trị và các đợt thu tiền trả góp</p>
         </div>
-        <button 
-          onClick={handleExportExcel}
-          style={{
-            padding: '10px 18px',
-            backgroundColor: '#10b981',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            fontSize: '14px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}
-        >
+        <button onClick={handleExportExcel} className="nut-xuat-excel">
           Xuất Báo Cáo Excel (.xlsx)
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: selectedBilling ? '1.2fr 0.8fr' : '1fr', gap: '20px' }}>
+      <div className={`bo-cuc-cot-doanh-thu ${selectedBilling ? 'chia-hai-cot' : 'mot-cot'}`}>
         {/* Cột 1: Bảng hóa đơn */}
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+        <div className="hop-danh-sach-hoa-don">
           <h3>Danh sách hóa đơn điều trị</h3>
-          <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '15px' }}>
+          <table className="bang-hoa-don">
             <thead>
-              <tr style={{ backgroundColor: '#f1f5f9', textAlign: 'left' }}>
-                <th style={{ padding: '10px', borderBottom: '2px solid #cbd5e1' }}>Mã ca</th>
-                <th style={{ padding: '10px', borderBottom: '2px solid #cbd5e1' }}>Bệnh nhân</th>
-                <th style={{ padding: '10px', borderBottom: '2px solid #cbd5e1', textAlign: 'right' }}>Tổng chi phí</th>
-                <th style={{ padding: '10px', borderBottom: '2px solid #cbd5e1', textAlign: 'right' }}>Đã trả</th>
-                <th style={{ padding: '10px', borderBottom: '2px solid #cbd5e1', textAlign: 'right' }}>Còn nợ</th>
-                <th style={{ padding: '10px', borderBottom: '2px solid #cbd5e1', textAlign: 'center' }}>Trạng thái</th>
-                <th style={{ padding: '10px', borderBottom: '2px solid #cbd5e1', textAlign: 'center' }}>Thao tác</th>
+              <tr className="dong-tieu-de-hoa-don">
+                <th className="o-tieu-de-hoa-don">Mã ca</th>
+                <th className="o-tieu-de-hoa-don">Bệnh nhân</th>
+                <th className="o-tieu-de-hoa-don" style={{ textAlign: 'right' }}>Tổng chi phí</th>
+                <th className="o-tieu-de-hoa-don" style={{ textAlign: 'right' }}>Đã trả</th>
+                <th className="o-tieu-de-hoa-don" style={{ textAlign: 'right' }}>Còn nợ</th>
+                <th className="o-tieu-de-hoa-don" style={{ textAlign: 'center' }}>Trạng thái</th>
+                <th className="o-tieu-de-hoa-don" style={{ textAlign: 'center' }}>Thao tác</th>
               </tr>
             </thead>
             <tbody>
               {billings.map(b => {
                 const isPaid = b.remaining <= 0
+                const isSelected = selectedBilling?.id === b.id
                 return (
-                  <tr key={b.id} style={{ borderBottom: '1px solid #e2e8f0', backgroundColor: selectedBilling?.id === b.id ? '#eff6ff' : 'transparent' }}>
-                    <td style={{ padding: '10px', color: '#64748b' }}>#{b.id}</td>
-                    <td style={{ padding: '10px', fontWeight: 'bold' }}>{b.patient_name}</td>
-                    <td style={{ padding: '10px', textAlign: 'right', fontWeight: 'bold' }}>{Number(b.total_cost).toLocaleString('vi-VN')} đ</td>
-                    <td style={{ padding: '10px', textAlign: 'right', color: '#16a34a' }}>{Number(b.total_paid).toLocaleString('vi-VN')} đ</td>
-                    <td style={{ padding: '10px', textAlign: 'right', color: isPaid ? '#64748b' : '#ef4444' }}>
+                  <tr key={b.id} className={`dong-hoa-don ${isSelected ? 'dong-dang-duoc-chon' : ''}`}>
+                    <td className="o-hoa-don-xam">#{b.id}</td>
+                    <td className="o-hoa-don-dam">{b.patient_name}</td>
+                    <td className="o-hoa-don-phai-dam">{Number(b.total_cost).toLocaleString('vi-VN')} đ</td>
+                    <td className="o-hoa-don-phai-xanh">{Number(b.total_paid).toLocaleString('vi-VN')} đ</td>
+                    <td className="o-hoa-don-phai-binh-thuong" style={{ color: isPaid ? '#64748b' : '#ef4444', fontWeight: 'bold' }}>
                       {Number(b.remaining).toLocaleString('vi-VN')} đ
                     </td>
-                    <td style={{ padding: '10px', textAlign: 'center' }}>
+                    <td className="o-hoa-don-giua">
                       {isPaid ? (
-                        <span style={{ backgroundColor: '#dcfce7', color: '#15803d', padding: '3px 6px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' }}>
+                        <span className="nhan-da-tra">
                           Đã thanh toán
                         </span>
                       ) : (
-                        <span style={{ backgroundColor: '#ffedd5', color: '#ea580c', padding: '3px 6px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' }}>
+                        <span className="nhan-tra-gop">
                           Trả góp
                         </span>
                       )}
                     </td>
-                    <td style={{ padding: '10px', textAlign: 'center' }}>
+                    <td className="o-hoa-don-giua">
                       <button
                         onClick={() => { setSelectedBilling(b); loadPayments(b.id); }}
-                        style={{ padding: '4px 8px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}
+                        className="nut-xem-chi-tiet"
                       >
                         Chi tiết
                       </button>
@@ -165,19 +152,16 @@ function Billing() {
 
         {/* Cột 2: Chi tiết đóng tiền (nếu chọn) */}
         {selectedBilling && (
-          <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="hop-chi-tiet-dong-tien">
+            <div className="tieu-de-doanh-thu">
               <h3>Lịch sử đóng tiền: #{selectedBilling.id}</h3>
               {selectedBilling.remaining > 0 && (
-                <button
-                  onClick={() => setShowPayModal(true)}
-                  style={{ padding: '6px 12px', backgroundColor: '#e0f2fe', color: '#0369a1', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}
-                >
+                <button onClick={() => setShowPayModal(true)} className="nut-thu-tien-moi">
                   Thu tiền đợt mới
                 </button>
               )}
             </div>
-            <p style={{ margin: '5px 0 15px 0', fontSize: '14px', color: '#64748b' }}>
+            <p className="dong-thong-tin-no">
               Bệnh nhân: <strong>{selectedBilling.patient_name}</strong> | Còn nợ: <strong style={{ color: '#ef4444' }}>{selectedBilling.remaining.toLocaleString('vi-VN')} đ</strong>
             </p>
 
@@ -186,14 +170,14 @@ function Billing() {
                 <p style={{ color: '#64748b', fontSize: '14px' }}>Chưa có đợt đóng tiền nào.</p>
               ) : (
                 payments.map(p => (
-                  <div key={p.id} style={{ border: '1px solid #e2e8f0', borderRadius: '6px', padding: '10px', marginBottom: '10px', backgroundColor: '#f8fafc' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', color: '#16a34a', fontSize: '14px' }}>
+                  <div key={p.id} className="hop-mot-lan-dong">
+                    <div className="dong-tien-da-dong">
                       <span>+{Number(p.amount_paid).toLocaleString('vi-VN')} đ</span>
-                      <span style={{ color: '#64748b', fontSize: '12px', fontWeight: 'normal' }}>
+                      <span className="ngay-gio-dong">
                         {new Date(p.payment_date).toLocaleDateString('vi-VN')}
                       </span>
                     </div>
-                    {p.notes && <div style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic', marginTop: '4px' }}>Ghi chú: {p.notes}</div>}
+                    {p.notes && <div className="ghi-chu-dong">Ghi chú: {p.notes}</div>}
                   </div>
                 ))
               )}
@@ -204,12 +188,12 @@ function Billing() {
 
       {/* Modal thu tiền đóng trả góp */}
       {showPayModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ backgroundColor: 'white', padding: '25px', borderRadius: '8px', width: '350px' }}>
+        <div className="nen-overlay-popup">
+          <div className="hop-popup-nho-sieu-nho">
             <h3 style={{ margin: '0 0 15px 0', color: '#1e3a8a' }}>Ghi nhận đóng tiền mới</h3>
-            <form onSubmit={handlePayInstallment} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px' }}>Số tiền thu (VNĐ)</label>
+            <form onSubmit={handlePayInstallment} className="form-popup-doc">
+              <div className="dong-nhap-lieu-don">
+                <label className="nhan-dien-o-nhap">Số tiền thu (VNĐ)</label>
                 <input
                   type="number"
                   placeholder="Nhập số tiền đóng..."
@@ -217,21 +201,21 @@ function Billing() {
                   onChange={e => setPayAmount(e.target.value)}
                   max={selectedBilling?.remaining}
                   required
-                  style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
+                  className="o-o-nhap-tien"
                 />
               </div>
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '5px' }}>Ghi chú</label>
+              <div className="dong-nhap-lieu-don">
+                <label className="nhan-dien-o-nhap">Ghi chú</label>
                 <textarea
                   placeholder="Ví dụ: Đóng tiền đợt 2..."
                   value={payNotes}
                   onChange={e => setPayNotes(e.target.value)}
-                  style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
+                  className="o-nhap-chu-nhieu-dong"
                 />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                <button type="button" onClick={() => setShowPayModal(false)} style={{ padding: '8px 15px' }}>Hủy</button>
-                <button type="submit" style={{ padding: '8px 15px', backgroundColor: '#10b981', color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold' }}>Xác nhận</button>
+              <div className="o-nut-bam-popup">
+                <button type="button" onClick={() => setShowPayModal(false)} className="nut-bam-huy">Hủy</button>
+                <button type="submit" className="nut-bam-cap-nhat">Xác nhận</button>
               </div>
             </form>
           </div>

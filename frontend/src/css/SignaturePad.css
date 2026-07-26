@@ -1,0 +1,36 @@
+.khung-chu-ky {
+  text-align: left;
+  margin-top: 10px;
+}
+
+.nhan-viet-chu-ky {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #334155;
+}
+
+.hop-ve-canvas {
+  border: 2px dashed #cbd5e1;
+  display: inline-block;
+  background-color: #fafafa;
+}
+
+.bang-ve-chu-ky {
+  cursor: crosshair;
+  display: block;
+}
+
+.vung-nut-bam {
+  margin-top: 5px;
+}
+
+.nut-bam-xoa-ky-lai {
+  padding: 4px 10px;
+  font-size: 12px;
+  background-color: #ef4444;
+  color: white;
+  border: 1px solid #ef4444;
+  cursor: pointer;
+}

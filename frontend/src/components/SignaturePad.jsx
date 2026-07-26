@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
+import '../css/SignaturePad.css'
 
 function SignaturePad({ onSaveSignature }) {
   const canvasRef = useRef(null)
@@ -59,11 +60,11 @@ function SignaturePad({ onSaveSignature }) {
   }
 
   return (
-    <div style={{ textAlign: 'left', marginTop: '10px' }}>
-      <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '5px', color: '#334155' }}>
+    <div className="khung-chu-ky">
+      <label className="nhan-viet-chu-ky">
         Ký tên điện tử xác nhận cam kết (Dùng chuột vẽ chữ ký)
       </label>
-      <div style={{ border: '2px dashed #cbd5e1', borderRadius: '6px', display: 'inline-block', backgroundColor: '#fafafa' }}>
+      <div className="hop-ve-canvas">
         <canvas
           ref={canvasRef}
           width={400}
@@ -72,22 +73,14 @@ function SignaturePad({ onSaveSignature }) {
           onMouseMove={draw}
           onMouseUp={stopDrawing}
           onMouseLeave={stopDrawing}
-          style={{ cursor: 'crosshair', display: 'block' }}
+          className="bang-ve-chu-ky"
         />
       </div>
-      <div style={{ marginTop: '5px' }}>
+      <div className="vung-nut-bam">
         <button
           type="button"
           onClick={clearCanvas}
-          style={{
-            padding: '4px 10px',
-            fontSize: '12px',
-            backgroundColor: '#ef4444',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
+          className="nut-bam-xoa-ky-lai"
         >
           Xóa ký lại
         </button>

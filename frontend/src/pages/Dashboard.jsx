@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../api'
 import { Link } from 'react-router-dom'
+import '../css/Dashboard.css'
 
 function Dashboard({ user, onUserUpdate }) {
   const [stats, setStats] = useState({
@@ -102,59 +103,59 @@ function Dashboard({ user, onUserUpdate }) {
   }
 
   return (
-    <div style={{ maxWidth: '1100px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-      <h2 style={{ marginBottom: '20px', color: '#1e3a8a' }}>Tổng quan hoạt động Phòng khám Nha khoa</h2>
+    <div className="khung-dashboard">
+      <h2 className="tieu-de-trang">Tổng quan hoạt động Phòng khám Nha khoa</h2>
       
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '30px' }}>
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}>TỔNG SỐ BỆNH NHÂN</div>
-          <div style={{ fontSize: '28px', fontWeight: 'bold', margin: '10px 0', color: '#1e3a8a' }}>{stats.totalPatients}</div>
-          <Link to="/patients" style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '13px', fontWeight: 'bold' }}>Quản lý bệnh nhân →</Link>
+      <div className="hop-chi-so-nhanh">
+        <div className="the-chi-so">
+          <div className="tieu-de-chi-so">TỔNG SỐ BỆNH NHÂN</div>
+          <div className="so-luong-chi-so">{stats.totalPatients}</div>
+          <Link to="/patients" className="duong-dan-chi-tiet">Quản lý bệnh nhân →</Link>
         </div>
 
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}>TỔNG DOANH THU ĐIỀU TRỊ</div>
-          <div style={{ fontSize: '24px', fontWeight: 'bold', margin: '10px 0', color: '#1e3a8a' }}>{stats.totalRevenue.toLocaleString('vi-VN')} đ</div>
-          <span style={{ fontSize: '12px', color: '#64748b' }}>Tính trên tổng chi phí ghi nhận</span>
+        <div className="the-chi-so">
+          <div className="tieu-de-chi-so">TỔNG DOANH THU ĐIỀU TRỊ</div>
+          <div className="so-luong-doanh-thu">{stats.totalRevenue.toLocaleString('vi-VN')} đ</div>
+          <span className="mo-ta-nho">Tính trên tổng chi phí ghi nhận</span>
         </div>
 
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}>DOANH THU ĐÃ THU TIỀN</div>
-          <div style={{ fontSize: '24px', fontWeight: 'bold', margin: '10px 0', color: '#16a34a' }}>{stats.totalCashCollected.toLocaleString('vi-VN')} đ</div>
-          <Link to="/billing" style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '13px', fontWeight: 'bold' }}>Quản lý doanh thu →</Link>
+        <div className="the-chi-so">
+          <div className="tieu-de-chi-so">DOANH THU ĐA THU TIỀN</div>
+          <div className="so-luong-da-thu">{stats.totalCashCollected.toLocaleString('vi-VN')} đ</div>
+          <Link to="/billing" className="duong-dan-chi-tiet">Quản lý doanh thu →</Link>
         </div>
 
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <div style={{ color: '#64748b', fontSize: '14px', fontWeight: 'bold' }}>VẬT TƯ CẦN NHẬP KHO</div>
-          <div style={{ fontSize: '28px', fontWeight: 'bold', margin: '10px 0', color: stats.lowStockCount > 0 ? '#ef4444' : '#16a34a' }}>
+        <div className="the-chi-so">
+          <div className="tieu-de-chi-so">VẬT TƯ CẦN NHẬP KHO</div>
+          <div className={`so-luong-chi-so ${stats.lowStockCount > 0 ? 'so-luong-can-canh-bao' : 'so-luong-an-toan'}`}>
             {stats.lowStockCount}
           </div>
-          <Link to="/inventory" style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '13px', fontWeight: 'bold' }}>Kiểm tra kho vật tư →</Link>
+          <Link to="/inventory" className="duong-dan-chi-tiet">Kiểm tra kho vật tư →</Link>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px' }}>
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+      <div className="bo-cuc-hai-phan">
+        <div className="hop-canh-bao-kho">
           <h3>Cảnh báo kho vật tư (Hết hàng hoặc tồn kho thấp)</h3>
           {stats.lowStockItems.length === 0 ? (
             <p style={{ color: '#15803d', fontSize: '14px', marginTop: '15px', fontWeight: 'bold' }}>
               Kho y tế ở trạng thái an toàn, không có vật tư nào dưới ngưỡng tối thiểu.
             </p>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '15px' }}>
+            <table className="table-canh-bao">
               <thead>
-                <tr style={{ backgroundColor: '#f1f5f9', textAlign: 'left' }}>
-                  <th style={{ padding: '10px', borderBottom: '1px solid #cbd5e1' }}>Vật tư</th>
-                  <th style={{ padding: '10px', borderBottom: '1px solid #cbd5e1', textAlign: 'center' }}>Tồn kho</th>
-                  <th style={{ padding: '10px', borderBottom: '1px solid #cbd5e1', textAlign: 'center' }}>Ngưỡng cảnh báo</th>
+                <tr className="table-header">
+                  <th className="th-style">Vật tư</th>
+                  <th className="th-style" style={{ textAlign: 'center' }}>Tồn kho</th>
+                  <th className="th-style" style={{ textAlign: 'center' }}>Ngưỡng cảnh báo</th>
                 </tr>
               </thead>
               <tbody>
                 {stats.lowStockItems.map(item => (
-                  <tr key={item.id} style={{ borderBottom: '1px solid #e2e8f0', color: '#ef4444', fontWeight: 'bold' }}>
-                    <td style={{ padding: '10px' }}>{item.name} ({item.unit})</td>
-                    <td style={{ padding: '10px', textAlign: 'center' }}>{item.quantity}</td>
-                    <td style={{ padding: '10px', textAlign: 'center', color: '#64748b' }}>{item.min_quantity}</td>
+                  <tr key={item.id} className="tr-loi">
+                    <td className="td-style">{item.name} ({item.unit})</td>
+                    <td className="td-style" style={{ textAlign: 'center' }}>{item.quantity}</td>
+                    <td className="td-style" style={{ textAlign: 'center', color: '#64748b' }}>{item.min_quantity}</td>
                   </tr>
                 ))}
               </tbody>
@@ -162,56 +163,50 @@ function Dashboard({ user, onUserUpdate }) {
           )}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ backgroundColor: '#eff6ff', padding: '20px', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
-            <h3 style={{ color: '#1e3a8a', margin: '0 0 15px 0' }}>Quy trình nghiệp vụ:</h3>
-            <ul style={{ fontSize: '14px', lineHeight: '22px', paddingLeft: '20px', color: '#1e3a8a' }}>
-              <li style={{ marginBottom: '8px' }}>
+        <div className="hop-ben-phai">
+          <div className="hop-huong-dan-nghiep-vu">
+            <h3 className="tieu-de-huong-dan">Quy trình nghiệp vụ:</h3>
+            <ul className="danh-sach-huong-dan">
+              <li className="dong-huong-dan">
                 <strong>Bước 1:</strong> Thêm thông tin hành chính bệnh nhân mới ở tab <strong>Bệnh nhân</strong>.
               </li>
-              <li style={{ marginBottom: '8px' }}>
+              <li className="dong-huong-dan">
                 <strong>Bước 2:</strong> Tạo bệnh án khám, chọn răng điều trị, chọn vật tư y tế sử dụng và cho bệnh nhân <strong>ký tên điện tử</strong> trên màn hình.
               </li>
-              <li style={{ marginBottom: '8px' }}>
+              <li className="dong-huong-dan">
                 <strong>Bước 3:</strong> Hệ thống tự động <strong>trừ kho vật tư</strong> tương ứng số lượng đã dùng.
               </li>
-              <li style={{ marginBottom: '8px' }}>
+              <li className="dong-huong-dan">
                 <strong>Bước 4:</strong> Theo dõi hóa đơn và tiến hành đóng tiền trả góp theo đợt ở tab <strong>Doanh thu</strong>.
               </li>
             </ul>
           </div>
 
-          <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-            <h3 style={{ color: '#1e3a8a', margin: '0 0 15px 0' }}>Bảo mật tài khoản 2 lớp (2FA)</h3>
+          <div className="hop-bao-mat-hai-lop">
+            <h3 className="tieu-de-bao-mat">Bảo mật tài khoản 2 lớp (2FA)</h3>
             {error2FA && <p style={{ color: 'red', fontSize: '13px' }}>{error2FA}</p>}
             
             {user?.twofa_enabled ? (
               <div>
-                <p style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '14px' }}>Trạng thái: ĐÃ BẬT BẢO MẬT 2 LỚP</p>
-                <button 
-                  onClick={handleDisable2FA} 
-                  style={{ width: '100%', padding: '10px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-                >
+                <p className="chu-khi-bat">Trạng thái: ĐÃ BẬT BẢO MẬT 2 LỚP</p>
+                <button onClick={handleDisable2FA} className="nut-tat-2fa">
                   Tắt bảo mật 2FA
                 </button>
               </div>
             ) : (
               <div>
-                <p style={{ color: '#ea580c', fontWeight: 'bold', fontSize: '14px' }}>Trạng thái: CHƯA BẬT BẢO MẬT 2 LỚP</p>
+                <p className="chu-chua-bat">Trạng thái: CHƯA BẬT BẢO MẬT 2 LỚP</p>
                 {!temp2FA ? (
-                  <button 
-                    onClick={handleInit2FA} 
-                    style={{ width: '100%', padding: '10px', backgroundColor: '#1e3a8a', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-                  >
+                  <button onClick={handleInit2FA} className="nut-bat-2fa">
                     Kích hoạt bảo mật 2FA
                   </button>
                 ) : (
-                  <div style={{ textAlign: 'center', marginTop: '15px' }}>
+                  <div className="khung-xac-thuc-otp">
                     <p style={{ fontSize: '13px', color: '#64748b' }}>Quét mã QR dưới đây bằng Google Authenticator:</p>
-                    <img src={temp2FA.qrCodeUrl} alt="QR Code 2FA" style={{ border: '1px solid #cbd5e1', padding: '5px', borderRadius: '4px', margin: '10px 0' }} />
+                    <img src={temp2FA.qrCodeUrl} alt="QR Code 2FA" className="anh-ma-qr" />
                     <p style={{ fontSize: '12px', color: '#64748b' }}>Khóa dự phòng: <code>{temp2FA.secret}</code></p>
                     
-                    <form onSubmit={handleEnable2FA} style={{ display: 'flex', gap: '5px', marginTop: '10px' }}>
+                    <form onSubmit={handleEnable2FA} className="form-xac-nhan-2fa">
                       <input 
                         type="text" 
                         maxLength="6" 
@@ -219,11 +214,11 @@ function Dashboard({ user, onUserUpdate }) {
                         value={otpCode}
                         onChange={e => setOtpCode(e.target.value)}
                         required
-                        style={{ flex: 1, padding: '8px', border: '1px solid #cbd5e1', borderRadius: '4px', textAlign: 'center', fontWeight: 'bold' }}
+                        className="o-nhap-ma-otp"
                       />
-                      <button type="submit" style={{ padding: '8px 12px', backgroundColor: '#10b981', color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>Kích hoạt</button>
+                      <button type="submit" className="nut-submit-otp">Kích hoạt</button>
                     </form>
-                    <button type="button" onClick={() => setTemp2FA(null)} style={{ background: 'none', border: 'none', color: '#3b82f6', textDecoration: 'underline', marginTop: '10px', cursor: 'pointer', fontSize: '13px' }}>Hủy bỏ</button>
+                    <button type="button" onClick={() => setTemp2FA(null)} className="nut-cancel-otp">Hủy bỏ</button>
                   </div>
                 )}
               </div>
