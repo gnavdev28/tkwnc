@@ -17,7 +17,8 @@ function Dashboard({ user, onUserUpdate }) {
   const [otpCode, setOtpCode] = useState('')
   const [error2FA, setError2FA] = useState('')
 
-  useEffect(() => {
+  // Tải dữ liệu thống kê
+  useEffect(function() {
     async function loadDashboardData() {
       try {
         const [patientsRes, billingRes, inventoryRes] = await Promise.all([
@@ -32,12 +33,14 @@ function Dashboard({ user, onUserUpdate }) {
 
         let totalRevenue = 0
         let totalCashCollected = 0
-        billingsList.forEach(b => {
+        billingsList.forEach(function(b) {
           totalRevenue += Number(b.total_cost)
           totalCashCollected += Number(b.total_paid)
         })
 
-        const lowStock = inventoryList.filter(m => m.quantity <= m.min_quantity)
+        const lowStock = inventoryList.filter(function(m) {
+          return m.quantity <= m.min_quantity
+        })
 
         setStats({
           totalPatients: patientsList.length,
@@ -56,7 +59,8 @@ function Dashboard({ user, onUserUpdate }) {
     loadDashboardData()
   }, [])
 
-  const handleInit2FA = async () => {
+  // Khởi tạo mã QR để quét 2FA
+  async function handleInit2FA() {
     setError2FA('')
     try {
       const res = await api.post('/auth/2fa/setup')
@@ -68,7 +72,8 @@ function Dashboard({ user, onUserUpdate }) {
     }
   }
 
-  const handleEnable2FA = async (e) => {
+  // Xác nhận và kích hoạt 2FA
+  async function handleEnable2FA(e) {
     e.preventDefault()
     setError2FA('')
     try {
@@ -80,11 +85,12 @@ function Dashboard({ user, onUserUpdate }) {
         setOtpCode('')
       }
     } catch (err) {
-      setError2FA(err.response?.data?.message || 'Mã xác nhận không đúng.')
+      setError2FA(err.response?.data?.message || 'Mã OTP không chính xác.')
     }
   }
 
-  const handleDisable2FA = async () => {
+  // Tắt bảo mật 2FA
+  async function handleDisable2FA() {
     if (!window.confirm('Bạn có chắc muốn tắt bảo mật 2 lớp?')) return
     setError2FA('')
     try {
@@ -99,7 +105,7 @@ function Dashboard({ user, onUserUpdate }) {
   }
 
   if (loading) {
-    return <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>Đang tổng hợp dữ liệu...</div>
+    return <div style={{ padding: '20px' }}>Đang tải dữ liệu thống kê...</div>
   }
 
   return (
@@ -120,7 +126,7 @@ function Dashboard({ user, onUserUpdate }) {
         </div>
 
         <div className="the-chi-so">
-          <div className="tieu-de-chi-so">DOANH THU ĐA THU TIỀN</div>
+          <div className="tieu-de-chi-so">DOANH THU ĐÃ THU TIỀN</div>
           <div className="so-luong-da-thu">{stats.totalCashCollected.toLocaleString('vi-VN')} đ</div>
           <Link to="/billing" className="duong-dan-chi-tiet">Quản lý doanh thu →</Link>
         </div>
@@ -151,36 +157,22 @@ function Dashboard({ user, onUserUpdate }) {
                 </tr>
               </thead>
               <tbody>
-                {stats.lowStockItems.map(item => (
-                  <tr key={item.id} className="tr-loi">
-                    <td className="td-style">{item.name} ({item.unit})</td>
-                    <td className="td-style" style={{ textAlign: 'center' }}>{item.quantity}</td>
-                    <td className="td-style" style={{ textAlign: 'center', color: '#64748b' }}>{item.min_quantity}</td>
-                  </tr>
-                ))}
+                {stats.lowStockItems.map(function(item) {
+                  return (
+                    <tr key={item.id} className="tr-loi">
+                      <td className="td-style">{item.name} ({item.unit})</td>
+                      <td className="td-style" style={{ textAlign: 'center' }}>{item.quantity}</td>
+                      <td className="td-style" style={{ textAlign: 'center', color: '#64748b' }}>{item.min_quantity}</td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           )}
         </div>
 
         <div className="hop-ben-phai">
-          <div className="hop-huong-dan-nghiep-vu">
-            <h3 className="tieu-de-huong-dan">Quy trình nghiệp vụ:</h3>
-            <ul className="danh-sach-huong-dan">
-              <li className="dong-huong-dan">
-                <strong>Bước 1:</strong> Thêm thông tin hành chính bệnh nhân mới ở tab <strong>Bệnh nhân</strong>.
-              </li>
-              <li className="dong-huong-dan">
-                <strong>Bước 2:</strong> Tạo bệnh án khám, chọn răng điều trị, chọn vật tư y tế sử dụng và cho bệnh nhân <strong>ký tên điện tử</strong> trên màn hình.
-              </li>
-              <li className="dong-huong-dan">
-                <strong>Bước 3:</strong> Hệ thống tự động <strong>trừ kho vật tư</strong> tương ứng số lượng đã dùng.
-              </li>
-              <li className="dong-huong-dan">
-                <strong>Bước 4:</strong> Theo dõi hóa đơn và tiến hành đóng tiền trả góp theo đợt ở tab <strong>Doanh thu</strong>.
-              </li>
-            </ul>
-          </div>
+
 
           <div className="hop-bao-mat-hai-lop">
             <h3 className="tieu-de-bao-mat">Bảo mật tài khoản 2 lớp (2FA)</h3>
@@ -212,13 +204,13 @@ function Dashboard({ user, onUserUpdate }) {
                         maxLength="6" 
                         placeholder="Mã OTP 6 số" 
                         value={otpCode}
-                        onChange={e => setOtpCode(e.target.value)}
+                        onChange={function(e) { setOtpCode(e.target.value) }}
                         required
                         className="o-nhap-ma-otp"
                       />
                       <button type="submit" className="nut-submit-otp">Kích hoạt</button>
                     </form>
-                    <button type="button" onClick={() => setTemp2FA(null)} className="nut-cancel-otp">Hủy bỏ</button>
+                    <button type="button" onClick={function() { setTemp2FA(null) }} className="nut-cancel-otp">Hủy bỏ</button>
                   </div>
                 )}
               </div>

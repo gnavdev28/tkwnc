@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-ro
 import api from './api'
 import './css/App.css'
 
-// Import các trang chính
 import Login from './pages/Login.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Patients from './pages/Patients.jsx'
@@ -11,10 +10,12 @@ import Inventory from './pages/Inventory.jsx'
 import Billing from './pages/Billing.jsx'
 
 function App() {
+  // Tài khoản đăng nhập hiện tại
   const [user, setUser] = useState(null)
+  // Trạng thái tải trang
   const [loading, setLoading] = useState(true)
 
-  // Gọi API /me để kiểm tra phiên đăng nhập cũ khi tải trang
+  // Kiểm tra đăng nhập cũ khi tải trang
   useEffect(() => {
     async function checkAuth() {
       try {
@@ -23,7 +24,7 @@ function App() {
           setUser(response.data.user)
         }
       } catch (error) {
-        console.log('Chưa đăng nhập hoặc phiên làm việc đã hết hạn.')
+        console.log('Chưa đăng nhập hoặc hết hạn phiên làm việc.')
       } finally {
         setLoading(false)
       }
@@ -31,12 +32,13 @@ function App() {
     checkAuth()
   }, [])
 
+  // Xử lý đăng xuất
   const handleLogout = async () => {
     try {
       await api.post('/auth/logout')
       setUser(null)
     } catch (error) {
-      alert('Lỗi đăng xuất!')
+      alert('Lỗi khi đăng xuất!')
     }
   }
 
@@ -47,7 +49,7 @@ function App() {
   return (
     <Router>
       <div className="khung-layout-chinh">
-        {/* Thanh điều hướng (Navbar) hiển thị khi đã đăng nhập */}
+        {/* Menu điều hướng chính */}
         {user && (
           <header className="thanh-dau-trang-navbar">
             <h2 className="tieu-de-navbar">Nha Khoa</h2>
@@ -56,7 +58,7 @@ function App() {
               <Link to="/patients" className="duong-dan-menu">Bệnh nhân</Link>
               <Link to="/inventory" className="duong-dan-menu">Kho vật tư</Link>
               <Link to="/billing" className="duong-dan-menu">Doanh thu & Trả góp</Link>
-              <span className="chu-chao-ten-bac-si">Xin chào, {user.fullname} ({user.role})</span>
+              <span className="chu-chao-ten-bac-si">Xin chào, {user.fullname}</span>
               <button onClick={handleLogout} className="nut-dang-xuat">Đăng xuất</button>
             </nav>
           </header>
