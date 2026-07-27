@@ -1,6 +1,6 @@
 const patientModel = require("../models/patientModel")
 
-// 1. API lấy danh sách tất cả bệnh nhân
+// Lấy danh sách tất cả bệnh nhân trong hệ thống
 async function index(req, res) {
     try {
         const patients = await patientModel.getAllPatients()
@@ -17,7 +17,7 @@ async function index(req, res) {
     }
 }
 
-// 2. API lấy chi tiết 1 bệnh nhân theo ID
+// Lấy thông tin chi tiết một bệnh nhân theo ID
 async function show(req, res) {
     try {
         const id = req.params.id
@@ -41,11 +41,12 @@ async function show(req, res) {
     }
 }
 
-// 3. API thêm bệnh nhân mới
+// Thêm hồ sơ bệnh nhân mới
 async function store(req, res) {
     try {
         const { fullname, phone, email, dob, gender, address } = req.body
 
+        // Kiểm tra thông tin bắt buộc
         if (!fullname || !phone || !dob) {
             return res.status(400).json({
                 success: false,
@@ -68,7 +69,7 @@ async function store(req, res) {
     }
 }
 
-// 4. API xóa bệnh nhân
+// Xóa bệnh nhân khỏi hệ thống
 async function destroy(req, res) {
     try {
         const id = req.params.id
@@ -86,7 +87,7 @@ async function destroy(req, res) {
     }
 }
 
-// 5. API cập nhật bệnh nhân
+// Cập nhật thông tin bệnh nhân
 async function update(req, res) {
     try {
         const id = req.params.id

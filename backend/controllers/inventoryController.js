@@ -1,6 +1,6 @@
 const inventoryModel = require("../models/inventoryModel")
 
-// 1. API lấy danh sách toàn bộ vật tư trong kho y tế
+// Lấy danh sách toàn bộ vật tư y tế trong kho
 async function index(req, res) {
     try {
         const materials = await inventoryModel.getAllMaterials()
@@ -17,7 +17,7 @@ async function index(req, res) {
     }
 }
 
-// 2. API cập nhật/nhập thêm số lượng vật tư kho
+// Cập nhật số lượng vật tư tồn kho thực tế
 async function update(req, res) {
     try {
         const id = req.params.id
@@ -38,7 +38,7 @@ async function update(req, res) {
             })
         }
 
-        // Cập nhật thông tin kho vật tư
+        // Thực hiện cập nhật số lượng tồn kho mới vào bảng materials
         await inventoryModel.updateMaterial(id, name, unit, quantity, min_quantity || 10)
         
         res.json({
@@ -54,7 +54,7 @@ async function update(req, res) {
     }
 }
 
-// 3. API thêm mới vật tư y tế vào kho
+// Thêm mới một loại vật tư y tế vào danh mục kho
 async function store(req, res) {
     try {
         const { name, unit, quantity, min_quantity } = req.body

@@ -11,7 +11,8 @@ function Login({ onLogin }) {
   const [require2FA, setRequire2FA] = useState(false)
   const navigate = useNavigate()
 
-  const handleLogin = async (e) => {
+  // Hàm xử lý đăng nhập thường
+  async function handleLogin(e) {
     e.preventDefault()
     setError('')
     try {
@@ -31,7 +32,8 @@ function Login({ onLogin }) {
     }
   }
 
-  const handleVerifyOTP = async (e) => {
+  // Hàm xác minh OTP 2FA
+  async function handleVerifyOTP(e) {
     e.preventDefault()
     setError('')
     try {
@@ -43,13 +45,14 @@ function Login({ onLogin }) {
         navigate('/dashboard')
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Mã OTP không hợp lệ.')
+      setError(err.response?.data?.message || 'Mã OTP không đúng.')
     }
   }
 
   return (
     <div className="khung-dang-nhap">
       <h2 className="tieu-de-logo">Hệ thống Nha Khoa</h2>
+      
       <p className="dong-mo-ta-phu">
         {require2FA ? 'Xác thực bảo mật OTP 2FA' : 'Đăng nhập vào hệ thống quản lý phòng khám'}
       </p>
@@ -63,26 +66,22 @@ function Login({ onLogin }) {
       {!require2FA ? (
         <form onSubmit={handleLogin} className="form-dang-nhap">
           <div>
-            <label className="nhan-o-nhap">
-              Tên đăng nhập
-            </label>
+            <label className="nhan-o-nhap">Tên đăng nhập</label>
             <input 
               type="text" 
               value={username} 
-              onChange={(e) => setUsername(e.target.value)} 
+              onChange={function(e) { setUsername(e.target.value) }} 
               required
               className="o-nhap-lieu-thuong"
             />
           </div>
 
           <div>
-            <label className="nhan-o-nhap">
-              Mật khẩu
-            </label>
+            <label className="nhan-o-nhap">Mật khẩu</label>
             <input 
               type="password" 
               value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
+              onChange={function(e) { setPassword(e.target.value) }} 
               required
               className="o-nhap-lieu-thuong"
             />
@@ -95,14 +94,12 @@ function Login({ onLogin }) {
       ) : (
         <form onSubmit={handleVerifyOTP} className="form-dang-nhap">
           <div>
-            <label className="nhan-o-nhap">
-              Nhập mã OTP 6 số
-            </label>
+            <label className="nhan-o-nhap">Nhập mã OTP 6 số</label>
             <input 
               type="text" 
               maxLength="6"
               value={otp} 
-              onChange={(e) => setOtp(e.target.value)} 
+              onChange={function(e) { setOtp(e.target.value) }} 
               placeholder="000000"
               required
               className="o-nhap-otp-to"
@@ -115,7 +112,7 @@ function Login({ onLogin }) {
           
           <button 
             type="button" 
-            onClick={() => setRequire2FA(false)}
+            onClick={function() { setRequire2FA(false) }}
             className="nut-quay-lai-dang-nhap"
           >
             Quay lại

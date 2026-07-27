@@ -3,7 +3,7 @@ const inventoryModel = require("../models/inventoryModel")
 const fs = require("fs")
 const path = require("path")
 
-// 1. API lấy danh sách ca điều trị của 1 bệnh nhân
+// Lấy danh sách bệnh án (ca khám) của một bệnh nhân
 async function getByPatient(req, res) {
     try {
         const patientId = req.params.patientId
@@ -21,7 +21,7 @@ async function getByPatient(req, res) {
     }
 }
 
-// 2. API tạo bệnh án mới (Tự động lưu ảnh chữ ký từ Canvas và lưu tình trạng răng)
+// Tạo bệnh án mới (lưu ảnh chữ ký Canvas dạng base64 và tự động trừ kho vật tư tiêu hao)
 async function store(req, res) {
     try {
         const { patient_id, treatment_date, total_cost, notes, tooth_number, condition, signatureBase64, usedMaterials } = req.body
@@ -36,13 +36,12 @@ async function store(req, res) {
 
         let signature_path = null
 
-        // Xử lý lưu chuỗi Base64 từ Canvas ký tên thành file ảnh PNG trên Server
+        // Xử lý lưu ảnh chữ ký từ dữ liệu Base64 truyền lên
         if (signatureBase64 && signatureBase64.includes("base64,")) {
             const base64Data = signatureBase64.split("base64,")[1]
             const filename = `signature_${Date.now()}.png`
             const uploadDir = path.join(__dirname, "../uploads")
             
-            // Tạo thư mục uploads nếu chưa có
             if (!fs.existsSync(uploadDir)) {
                 fs.mkdirSync(uploadDir, { recursive: true })
             }
@@ -52,7 +51,7 @@ async function store(req, res) {
             signature_path = `/uploads/${filename}`
         }
 
-        // 1. Lưu thông tin ca điều trị chính
+        // 1. Tạo bản ghi ca điều trị chính (lưu vào bảng treatments)
         const treatmentId = await treatmentModel.createTreatment(
             patient_id,
             doctor_id,
@@ -62,7 +61,7 @@ async function store(req, res) {
             notes
         )
 
-        // 2. Lưu chi tiết số hiệu răng và tình trạng điều trị
+        // 2. Tạo bản ghi chi tiết tình trạng răng bệnh lý (lưu vào bảng treatment_details)
         await treatmentModel.addTreatmentDetail(
             treatmentId,
             tooth_number,
@@ -70,11 +69,13 @@ async function store(req, res) {
             notes
         )
 
-        // 3. Tự động trừ số lượng vật tư y tế trong kho và lưu vào bảng sử dụng vật tư
+        // 3. Tự động khấu hao vật tư y tế trong kho (lặp qua các thuốc/vật tư đã chọn dùng)
         if (usedMaterials && Array.isArray(usedMaterials)) {
             for (let item of usedMaterials) {
                 if (item.material_id && item.quantity_used > 0) {
+                    // Trừ bớt số lượng tồn trong kho vật tư
                     await inventoryModel.deductMaterialQuantity(item.material_id, item.quantity_used)
+                    // Ghi nhận lịch sử dùng vật tư tương ứng với ca điều trị này
                     await inventoryModel.logTreatmentMaterial(treatmentId, item.material_id, item.quantity_used)
                 }
             }

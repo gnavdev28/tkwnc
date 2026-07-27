@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react'
 import '../css/SignaturePad.css'
 
-function SignaturePad({ onSaveSignature }) {
+function SignaturePad({ onSave }) {
   const canvasRef = useRef(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [isEmpty, setIsEmpty] = useState(true)
 
-  useEffect(() => {
+  useEffect(function() {
     const canvas = canvasRef.current
     if (canvas) {
       const ctx = canvas.getContext('2d')
@@ -17,7 +17,7 @@ function SignaturePad({ onSaveSignature }) {
   }, [])
 
   // Bắt đầu vẽ chữ ký
-  const startDrawing = (e) => {
+  function startDrawing(e) {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
     const rect = canvas.getBoundingClientRect()
@@ -29,7 +29,7 @@ function SignaturePad({ onSaveSignature }) {
   }
 
   // Vẽ các đường nét khi di chuyển chuột
-  const draw = (e) => {
+  function draw(e) {
     if (!isDrawing) return
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
@@ -40,23 +40,26 @@ function SignaturePad({ onSaveSignature }) {
   }
 
   // Dừng vẽ
-  const stopDrawing = () => {
+  function stopDrawing() {
     if (!isDrawing) return
     setIsDrawing(false)
     
-    // Xuất chữ ký thành chuỗi ảnh Base64
     const canvas = canvasRef.current
     const dataUrl = canvas.toDataURL('image/png')
-    onSaveSignature(dataUrl)
+    if (onSave) {
+      onSave(dataUrl)
+    }
   }
 
   // Xóa bảng chữ ký để ký lại
-  const clearCanvas = () => {
+  function clearCanvas() {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     setIsEmpty(true)
-    onSaveSignature('')
+    if (onSave) {
+      onSave('')
+    }
   }
 
   return (

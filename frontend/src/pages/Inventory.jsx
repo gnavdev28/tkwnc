@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import api from '../api'
+import AddMaterialModal from '../components/AddMaterialModal.jsx'
+import EditMaterialModal from '../components/EditMaterialModal.jsx'
 import '../css/Inventory.css'
 
 function Inventory() {
   const [materials, setMaterials] = useState([])
   const [editingMaterial, setEditingMaterial] = useState(null)
-  const [editQty, setEditQty] = useState('')
   const [showAddModal, setShowAddModal] = useState(false)
-  const [newMaterial, setNewMaterial] = useState({
-    name: '',
-    unit: '',
-    quantity: '',
-    min_quantity: ''
-  })
 
-  useEffect(() => {
+  // Tải danh sách vật tư khi mở trang
+  useEffect(function() {
     loadInventory()
   }, [])
 
-  const loadInventory = async () => {
+  // Hàm tải dữ liệu vật tư
+  async function loadInventory() {
     try {
       const res = await api.get('/inventory')
       if (res.data.success) {
@@ -29,13 +26,13 @@ function Inventory() {
     }
   }
 
-  const handleUpdateStock = async (e) => {
-    e.preventDefault()
+  // Hàm xử lý sửa tồn kho từ component con EditMaterialModal
+  async function handleUpdateStock(newQty) {
     try {
       const payload = {
         name: editingMaterial.name,
         unit: editingMaterial.unit,
-        quantity: Number(editQty),
+        quantity: newQty,
         min_quantity: editingMaterial.min_quantity
       }
       const res = await api.put(`/inventory/${editingMaterial.id}`, payload)
@@ -49,20 +46,13 @@ function Inventory() {
     }
   }
 
-  const handleCreateMaterial = async (e) => {
-    e.preventDefault()
+  // Hàm xử lý thêm vật tư mới từ component con AddMaterialModal
+  async function handleCreateMaterial(materialData) {
     try {
-      const payload = {
-        name: newMaterial.name,
-        unit: newMaterial.unit,
-        quantity: Number(newMaterial.quantity),
-        min_quantity: Number(newMaterial.min_quantity)
-      }
-      const res = await api.post('/inventory', payload)
+      const res = await api.post('/inventory', materialData)
       if (res.data.success) {
         alert('Thêm vật tư y tế mới thành công!')
         setShowAddModal(false)
-        setNewMaterial({ name: '', unit: '', quantity: '', min_quantity: '' })
         loadInventory()
       }
     } catch (err) {
@@ -77,139 +67,63 @@ function Inventory() {
           <h2 className="tieu-de-kho-text">Quản lý Kho vật tư tiêu hao</h2>
           <p className="tieu-de-kho-desc">Theo dõi số lượng thuốc, kim tiêm, vật tư nha khoa thực tế</p>
         </div>
-        <button onClick={() => setShowAddModal(true)} className="nut-them-vat-tu">
+        <button onClick={function() { setShowAddModal(true) }} className="nut-them-vat-tu">
           + Thêm vật tư mới
         </button>
       </div>
 
-      <div className="the-bang-kho">
-        <table className="bang-ke-kho">
-          <thead>
-            <tr className="dong-tieu-de-kho">
-              <th className="o-tieu-de-kho">Mã vật tư</th>
-              <th className="o-tieu-de-kho">Tên vật tư y tế</th>
-              <th className="o-tieu-de-kho">Đơn vị tính</th>
-              <th className="o-tieu-de-kho" style={{ textAlign: 'center' }}>Số lượng tồn</th>
-              <th className="o-tieu-de-kho" style={{ textAlign: 'center' }}>Ngưỡng tối thiểu</th>
-              <th className="o-tieu-de-kho" style={{ textAlign: 'center' }}>Trạng thái</th>
-              <th className="o-tieu-de-kho" style={{ textAlign: 'center' }}>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            {materials.map(m => {
-              const isLowStock = m.quantity <= m.min_quantity
-              return (
-                <tr key={m.id} className={`dong-thuoc-trong-kho ${isLowStock ? 'dong-thuoc-sieu-canh-bao' : ''}`}>
-                  <td className="o-du-lieu-thuoc-xam">#{m.id}</td>
-                  <td className="o-du-lieu-in-dam">{m.name}</td>
-                  <td className="o-du-lieu-thuoc">{m.unit}</td>
-                  <td className="o-du-lieu-giua-dam">{m.quantity}</td>
-                  <td className="o-du-lieu-giua" style={{ color: '#64748b' }}>{m.min_quantity}</td>
-                  <td className="o-du-lieu-giua">
-                    {isLowStock ? (
-                      <span className="nhan-trang-thai-loi">
-                        CẦN NHẬP KHO
-                      </span>
-                    ) : (
-                      <span className="nhan-trang-thai-an-toan">
-                        An toàn
-                      </span>
-                    )}
-                  </td>
-                  <td className="o-du-lieu-giua">
-                    <button 
-                      onClick={() => { setEditingMaterial(m); setEditQty(m.quantity); }}
-                      className="nut-sua-kho"
-                    >
-                      Nhập/Sửa kho
-                    </button>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+      {/* Danh sách vật tư dạng hộp (Card List) */}
+      <div className="hop-danh-sach-vat-tu">
+        {materials.map(function(m) {
+          const isLowStock = m.quantity <= m.min_quantity
+          
+          let nhanTrangThai
+          if (isLowStock) {
+            nhanTrangThai = <span className="the-canh-bao-kho">CẦN NHẬP KHO</span>
+          } else {
+            nhanTrangThai = <span className="the-an-toan-kho">An toàn</span>
+          }
+
+          return (
+            <div key={m.id} className={`hop-vat-tu-item ${isLowStock ? 'vat-tu-sap-het' : ''}`}>
+              <div className="thong-tin-co-ban">
+                <span className="nhan-id-vat-tu">#{m.id}</span>
+                <span className="ten-vat-tu-dam">{m.name}</span>
+                <span className="don-vi-tinh">Đơn vị: {m.unit}</span>
+              </div>
+              
+              <div className="thong-tin-ton-kho">
+                <span>Tồn kho: <strong>{m.quantity}</strong></span>
+                <span className="nguong-canh-bao-so">Cảnh báo khi dưới: {m.min_quantity}</span>
+              </div>
+
+              <div className="nut-va-trang-thai">
+                {nhanTrangThai}
+                <button 
+                  onClick={function() { setEditingMaterial(m) }}
+                  className="nut-sua-kho"
+                >
+                  Nhập/Sửa kho
+                </button>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
       {showAddModal && (
-        <div className="nen-overlay-popup">
-          <div className="hop-popup-nho">
-            <h3 style={{ margin: '0 0 15px 0', color: '#1e3a8a' }}>Thêm vật tư y tế mới</h3>
-            <form onSubmit={handleCreateMaterial} className="form-popup-doc">
-              <div className="dong-nhap-lieu-don">
-                <label className="nhan-dien-o-nhap">Tên vật tư</label>
-                <input 
-                  type="text" 
-                  value={newMaterial.name} 
-                  onChange={e => setNewMaterial({ ...newMaterial, name: e.target.value })} 
-                  required 
-                  className="o-o-nhap-kho" 
-                />
-              </div>
-              <div className="dong-nhap-lieu-don">
-                <label className="nhan-dien-o-nhap">Đơn vị tính</label>
-                <input 
-                  type="text" 
-                  value={newMaterial.unit} 
-                  onChange={e => setNewMaterial({ ...newMaterial, unit: e.target.value })} 
-                  required 
-                  className="o-o-nhap-kho" 
-                />
-              </div>
-              <div className="dong-nhap-lieu-don">
-                <label className="nhan-dien-o-nhap">Số lượng ban đầu</label>
-                <input 
-                  type="number" 
-                  value={newMaterial.quantity} 
-                  onChange={e => setNewMaterial({ ...newMaterial, quantity: e.target.value })} 
-                  required 
-                  className="o-o-nhap-kho" 
-                />
-              </div>
-              <div className="dong-nhap-lieu-don">
-                <label className="nhan-dien-o-nhap">Ngưỡng tối thiểu</label>
-                <input 
-                  type="number" 
-                  value={newMaterial.min_quantity} 
-                  onChange={e => setNewMaterial({ ...newMaterial, min_quantity: e.target.value })} 
-                  required 
-                  className="o-o-nhap-kho" 
-                />
-              </div>
-              <div className="o-nut-bam-popup">
-                <button type="button" onClick={() => setShowAddModal(false)} className="nut-bam-huy">Hủy</button>
-                <button type="submit" className="nut-bam-them-moi">Thêm mới</button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <AddMaterialModal
+          onClose={function() { setShowAddModal(false) }}
+          onSubmit={handleCreateMaterial}
+        />
       )}
 
       {editingMaterial && (
-        <div className="nen-overlay-popup">
-          <div className="hop-popup-nho-sieu-nho">
-            <h3 style={{ margin: '0 0 15px 0', color: '#1e3a8a' }}>Nhập/Sửa số lượng kho</h3>
-            <p style={{ fontSize: '14px', color: '#475569', margin: '0 0 15px 0' }}>
-              Thay đổi số lượng cho vật tư: <strong>{editingMaterial.name}</strong> ({editingMaterial.unit})
-            </p>
-            <form onSubmit={handleUpdateStock} className="form-popup-doc">
-              <div className="dong-nhap-lieu-don">
-                <label className="nhan-dien-o-nhap">Số lượng mới</label>
-                <input 
-                  type="number" 
-                  value={editQty} 
-                  onChange={e => setEditQty(e.target.value)} 
-                  required 
-                  className="o-o-nhap-kho" 
-                />
-              </div>
-              <div className="o-nut-bam-popup">
-                <button type="button" onClick={() => setEditingMaterial(null)} className="nut-bam-huy">Hủy</button>
-                <button type="submit" className="nut-bam-cap-nhat">Cập nhật</button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <EditMaterialModal
+          material={editingMaterial}
+          onClose={function() { setEditingMaterial(null) }}
+          onSubmit={handleUpdateStock}
+        />
       )}
     </div>
   )

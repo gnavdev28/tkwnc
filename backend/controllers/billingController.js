@@ -1,7 +1,7 @@
 const billingModel = require("../models/billingModel")
 const ExcelJS = require("exceljs")
 
-// 1. API lấy danh sách doanh thu/công nợ trả góp
+// Lấy danh sách doanh thu hóa đơn và nợ trả góp
 async function index(req, res) {
     try {
         const billings = await billingModel.getAllBillings()
@@ -18,7 +18,7 @@ async function index(req, res) {
     }
 }
 
-// 2. API lấy danh sách các đợt thanh toán của 1 ca
+// Lấy lịch sử các đợt đóng tiền trả góp của một ca khám
 async function getPayments(req, res) {
     try {
         const treatmentId = req.params.treatmentId
@@ -36,7 +36,7 @@ async function getPayments(req, res) {
     }
 }
 
-// 3. API thực hiện đóng tiền (thanh toán trả góp)
+// Thực hiện thu tiền đóng trả góp đợt mới
 async function pay(req, res) {
     try {
         const { treatment_id, amount_paid, notes } = req.body
@@ -48,6 +48,7 @@ async function pay(req, res) {
             })
         }
 
+        // Lưu lượt đóng tiền vào bảng payments (SQL Trigger sẽ tự động cập nhật tổng tiền đã trả)
         await billingModel.createPayment(treatment_id, amount_paid, notes || "")
         res.json({
             success: true,
@@ -62,16 +63,16 @@ async function pay(req, res) {
     }
 }
 
-// 4. API xuất báo cáo doanh thu & trả góp ra file Excel (.xlsx) gửi về client tải xuống
+// Xuất danh sách doanh thu ra tệp Excel gửi trực tiếp về trình duyệt tải xuống
 async function exportExcel(req, res) {
     try {
         const billings = await billingModel.getAllBillings()
 
-        // Khởi tạo Workbook và Worksheet mới của ExcelJS
+        // Khởi tạo workbook Excel mới trong RAM
         const workbook = new ExcelJS.Workbook()
         const worksheet = workbook.addWorksheet("Doanh Thu Nha Khoa")
 
-        // Định nghĩa các cột Excel
+        // Cài đặt tên và kích cỡ cho các cột Excel
         worksheet.columns = [
             { header: "Mã ca", key: "id", width: 10 },
             { header: "Tên Bệnh Nhân", key: "patient_name", width: 25 },
@@ -82,7 +83,7 @@ async function exportExcel(req, res) {
             { header: "Còn Nợ (VNĐ)", key: "remaining", width: 20 }
         ]
 
-        // Đổ dữ liệu vào các dòng
+        // Thêm dữ liệu từng dòng vào sheet Excel
         billings.forEach(b => {
             worksheet.addRow({
                 id: b.id,
@@ -95,11 +96,11 @@ async function exportExcel(req, res) {
             })
         })
 
-        // Thiết lập Header gửi file Excel về trình duyệt
+        // Cấu hình Header phản hồi HTTP tải file đính kèm
         res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         res.setHeader("Content-Disposition", "attachment; filename=bao_cao_doanh_thu.xlsx")
 
-        // Ghi dữ liệu trực tiếp vào Response Stream
+        // Ghi luồng dữ liệu trực tiếp vào luồng phản hồi HTTP
         await workbook.xlsx.write(res)
         res.end()
     } catch (error) {
