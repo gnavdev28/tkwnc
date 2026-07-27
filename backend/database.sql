@@ -97,19 +97,17 @@ CREATE TABLE IF NOT EXISTS `installment_plans` (
 -- Mật khẩu mặc định cho các tài khoản là '123456' (đã được băm bằng bcrypt)
 -- bcrypt hash của '123456' là: $2b$10$AEZwaBJWxfvbzlstZLkOguGGrp9ngxdnhVqxTWIfGpgYYzkYRdku2
 INSERT INTO `users` (`username`, `password`, `fullname`, `role`) VALUES
-('admin', '$2b$10$AEZwaBJWxfvbzlstZLkOguGGrp9ngxdnhVqxTWIfGpgYYzkYRdku2', 'Nguyen Quan Tri', 'admin'),
-('doctor1', '$2b$10$AEZwaBJWxfvbzlstZLkOguGGrp9ngxdnhVqxTWIfGpgYYzkYRdku2', 'Bac Si Tran Van A', 'doctor'),
-('staff1', '$2b$10$AEZwaBJWxfvbzlstZLkOguGGrp9ngxdnhVqxTWIfGpgYYzkYRdku2', 'Le Thu Ngan', 'staff');
+('doctor', '$2b$10$AEZwaBJWxfvbzlstZLkOguGGrp9ngxdnhVqxTWIfGpgYYzkYRdku2', 'Bác Sĩ Ngọ Quang Long', 'doctor');
 
 -- Thêm một số vật tư y tế ban đầu
 INSERT INTO `materials` (`name`, `unit`, `quantity`, `min_quantity`) VALUES
-('Thuoc te lidocaine 2%', 'ong', 150, 20),
-('Composite tram rang', 'tuyp', 40, 10),
-('Bong cuon y te', 'goi', 80, 15),
-('Kim tiem nha khoa', 'cai', 200, 30),
-('Dung dich sat khuan betadine', 'chai', 15, 5);
+('Vật tư 1', 'ống', 150, 20),
+('Vật tư 2', 'tuýp', 40, 10),
+('Vật tư 3', 'gói', 80, 15),
+('Vật tư 4', 'cái', 200, 30),
+('Vật tư 5', 'chai', 15, 5);
 
 -- Thêm một số bệnh nhân ban đầu
 INSERT INTO `patients` (`fullname`, `phone`, `email`, `dob`, `gender`, `address`) VALUES
-('Nguyen Van Binh', '0912345678', 'binh@gmail.com', '1995-10-15', 'male', '123 Nguyen Trai, Ha Noi'),
-('Tran Thi Mai', '0987654321', 'mai@yahoo.com', '2000-05-20', 'female', '456 Tran Hung Dao, TP.HCM');
+('Nguyễn Văn Bình', '0912345678', 'binh@gmail.com', '1995-10-15', 'male', '123 Nguyễn Trãi, Hà Nội'),
+('Trần Thị Mai', '0987654321', 'mai@yahoo.com', '2000-05-20', 'female', '456 Trần Hưng Đạo, TP.HCM');
