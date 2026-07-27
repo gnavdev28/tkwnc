@@ -1,7 +1,6 @@
 .khung-dashboard {
   max-width: 1100px;
   margin: 0 auto;
-  font-family: sans-serif;
 }
 
 .tieu-de-trang {
@@ -109,27 +108,7 @@
   gap: 20px;
 }
 
-.hop-huong-dan-nghiep-vu {
-  background-color: #eff6ff;
-  padding: 20px;
-  border: 1px solid #bfdbfe;
-}
 
-.tieu-de-huong-dan {
-  color: #1e3a8a;
-  margin: 0 0 15px 0;
-}
-
-.danh-sach-huong-dan {
-  font-size: 14px;
-  line-height: 22px;
-  padding-left: 20px;
-  color: #1e3a8a;
-}
-
-.dong-huong-dan {
-  margin-bottom: 8px;
-}
 
 .hop-bao-mat-hai-lop {
   background-color: white;

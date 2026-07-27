@@ -1,7 +1,6 @@
 .khung-kho-vat-tu {
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
-  font-family: sans-serif;
 }
 
 .tieu-de-kho {
@@ -18,7 +17,7 @@
 
 .tieu-de-kho-desc {
   color: #64748b;
-  margin: 0;
+  margin: 5px 0 0 0;
 }
 
 .nut-them-vat-tu {
@@ -30,62 +29,70 @@
   font-weight: bold;
 }
 
-.the-bang-kho {
+/* Danh sách vật tư dạng hàng ngang gọn đẹp */
+.hop-danh-sach-vat-tu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hop-vat-tu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: white;
-  padding: 25px;
+  padding: 15px 20px;
   border: 1px solid #cbd5e1;
 }
 
-.bang-ke-kho {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.dong-tieu-de-kho {
-  background-color: #f1f5f9;
-  text-align: left;
-}
-
-.o-tieu-de-kho {
-  padding: 12px;
-  border-bottom: 2px solid #cbd5e1;
-}
-
-.dong-thuoc-trong-kho {
-  border-bottom: 1px solid #cbd5e1;
-}
-
-.dong-thuoc-trong-kho.dong-thuoc-sieu-canh-bao {
+.hop-vat-tu-item.vat-tu-sap-het {
   background-color: #fff5f5;
+  border-color: #fca5a5;
 }
 
-.o-du-lieu-thuoc {
-  padding: 12px;
+.thong-tin-co-ban {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 40%;
 }
 
-.o-du-lieu-thuoc-xam {
-  padding: 12px;
+.nhan-id-vat-tu {
   color: #64748b;
+  font-size: 14px;
 }
 
-.o-du-lieu-in-dam {
-  padding: 12px;
+.ten-vat-tu-dam {
   font-weight: bold;
   color: #1e3a8a;
+  font-size: 16px;
 }
 
-.o-du-lieu-giua {
-  padding: 12px;
-  text-align: center;
+.don-vi-tinh {
+  color: #64748b;
+  background-color: #f1f5f9;
+  padding: 2px 6px;
+  font-size: 13px;
 }
 
-.o-du-lieu-giua-dam {
-  padding: 12px;
-  text-align: center;
-  font-weight: bold;
+.thong-tin-ton-kho {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.nhan-trang-thai-loi {
+.nguong-canh-bao-so {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.nut-va-trang-thai {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.the-canh-bao-kho {
   background-color: #fee2e2;
   color: #ef4444;
   padding: 4px 8px;
@@ -94,37 +101,35 @@
   border: 1px solid #fca5a5;
 }
 
-.nhan-trang-thai-an-toan {
+.the-an-toan-kho {
   background-color: #dcfce7;
   color: #15803d;
   padding: 4px 8px;
   font-size: 12px;
   font-weight: bold;
-  border: 1px solid #86efac;
+  border: 1px solid #bbf7d0;
 }
 
 .nut-sua-kho {
-  padding: 6px 12px;
+  padding: 8px 12px;
   background-color: #3b82f6;
   color: white;
   border: 1px solid #3b82f6;
   cursor: pointer;
   font-weight: bold;
-  font-size: 12px;
 }
 
-/* Modal Styling */
+/* Các lớp CSS cho Popup Modal */
 .nen-overlay-popup {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
 }
 
 .hop-popup-nho {
@@ -138,7 +143,7 @@
   background-color: white;
   padding: 25px;
   border: 1px solid #cbd5e1;
-  width: 350px;
+  width: 320px;
 }
 
 .form-popup-doc {
@@ -154,15 +159,15 @@
 }
 
 .nhan-dien-o-nhap {
-  display: block;
   font-size: 13px;
   font-weight: bold;
+  color: #334155;
 }
 
 .o-o-nhap-kho {
-  width: 100%;
   padding: 8px;
-  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
 }
 
 .o-nut-bam-popup {
@@ -174,8 +179,8 @@
 
 .nut-bam-huy {
   padding: 8px 15px;
-  background-color: #f1f5f9;
-  color: #475569;
+  background-color: #e2e8f0;
+  color: #334155;
   border: 1px solid #cbd5e1;
   cursor: pointer;
 }
@@ -185,8 +190,8 @@
   background-color: #10b981;
   color: white;
   border: 1px solid #10b981;
-  font-weight: bold;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .nut-bam-cap-nhat {
@@ -194,6 +199,6 @@
   background-color: #3b82f6;
   color: white;
   border: 1px solid #3b82f6;
-  font-weight: bold;
   cursor: pointer;
+  font-weight: bold;
 }

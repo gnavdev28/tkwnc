@@ -1,7 +1,6 @@
 .khung-doanh-thu {
   max-width: 1100px;
   margin: 0 auto;
-  font-family: sans-serif;
 }
 
 .tieu-de-doanh-thu {
@@ -18,7 +17,7 @@
 
 .tieu-de-doanh-thu-desc {
   color: #64748b;
-  margin: 0;
+  margin: 5px 0 0 0;
 }
 
 .nut-xuat-excel {
@@ -29,9 +28,6 @@
   cursor: pointer;
   font-weight: bold;
   font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .bo-cuc-cot-doanh-thu {
@@ -53,112 +49,123 @@
   border: 1px solid #cbd5e1;
 }
 
-.bang-hoa-don {
-  width: 100%;
-  border-collapse: collapse;
+/* Kiểu dáng danh sách thẻ hóa đơn */
+.danh-sach-hoa-don-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin-top: 15px;
 }
 
-.dong-tieu-de-hoa-don {
-  background-color: #f1f5f9;
-  text-align: left;
+.hop-hoa-don-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
 }
 
-.o-tieu-de-hoa-don {
-  padding: 10px;
-  border-bottom: 2px solid #cbd5e1;
-}
-
-.dong-hoa-don {
-  border-bottom: 1px solid #cbd5e1;
-}
-
-.dong-hoa-don.dong-dang-duoc-chon {
+.hop-hoa-don-item.hoa-don-dang-chon {
   background-color: #eff6ff;
+  border-color: #3b82f6;
 }
 
-.o-hoa-don-xam {
-  padding: 10px;
+.hoa-don-tieu-de {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 30%;
+}
+
+.ma-ca-kham {
   color: #64748b;
+  font-size: 13px;
 }
 
-.o-hoa-don-dam {
-  padding: 10px;
-  font-weight: bold;
+.ten-benh-nhan-dam {
+  font-size: 16px;
+  color: #1e3a8a;
 }
 
-.o-hoa-don-phai-dam {
-  padding: 10px;
-  text-align: right;
-  font-weight: bold;
+.hoa-don-chi-phi {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
 }
 
-.o-hoa-don-phai-xanh {
-  padding: 10px;
-  text-align: right;
-  color: #16a34a;
+.hoa-don-thao-tac {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.o-hoa-don-phai-binh-thuong {
-  padding: 10px;
-  text-align: right;
-}
-
-.nhan-da-tra {
+.the-da-tra {
   background-color: #dcfce7;
   color: #15803d;
-  padding: 3px 6px;
+  padding: 4px 8px;
   font-size: 12px;
   font-weight: bold;
-  border: 1px solid #86efac;
+  border: 1px solid #bbf7d0;
 }
 
-.nhan-tra-gop {
-  background-color: #ffedd5;
-  color: #ea580c;
-  padding: 3px 6px;
+.the-chua-tra {
+  background-color: #fee2e2;
+  color: #ef4444;
+  padding: 4px 8px;
   font-size: 12px;
   font-weight: bold;
-  border: 1px solid #fdba74;
+  border: 1px solid #fca5a5;
+}
+
+.the-tra-gop {
+  background-color: #fef9c3;
+  color: #a16207;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  border: 1px solid #fef08a;
 }
 
 .nut-xem-chi-tiet {
-  padding: 4px 8px;
+  padding: 8px 12px;
   background-color: #3b82f6;
   color: white;
   border: 1px solid #3b82f6;
   cursor: pointer;
-  font-size: 12px;
+  font-weight: bold;
 }
 
-/* Chi tiết đóng tiền vế phải */
+/* Kiểu dáng chi tiết đóng tiền bên phải */
 .hop-chi-tiet-dong-tien {
   background-color: white;
   padding: 20px;
   border: 1px solid #cbd5e1;
 }
 
-.nut-thu-tien-moi {
-  padding: 6px 12px;
-  background-color: #e0f2fe;
-  color: #0369a1;
-  border: 1px solid #bae6fd;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 13px;
+.dong-thong-tin-no {
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 10px;
+  margin-top: 10px;
 }
 
-.dong-thong-tin-no {
-  margin: 5px 0 15px 0;
-  font-size: 14px;
-  color: #64748b;
+.nut-thu-tien-moi {
+  padding: 8px 12px;
+  background-color: #10b981;
+  color: white;
+  border: 1px solid #10b981;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .hop-mot-lan-dong {
-  border: 1px solid #cbd5e1;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #f8fafc;
+  padding: 12px;
+  border-bottom: 1px dashed #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .dong-tien-da-dong {
@@ -166,7 +173,7 @@
   justify-content: space-between;
   font-weight: bold;
   color: #16a34a;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .ngay-gio-dong {
@@ -176,15 +183,81 @@
 }
 
 .ghi-chu-dong {
-  font-size: 12px;
-  color: #64748b;
-  font-style: italic;
-  margin-top: 4px;
+  font-size: 13px;
+  color: #475569;
 }
 
-/* Form đóng tiền */
-.o-o-nhap-tien {
+/* CSS cho Popup Modal */
+.nen-overlay-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hop-popup-nho-sieu-nho {
+  background-color: white;
+  padding: 25px;
+  border: 1px solid #cbd5e1;
+  width: 320px;
+}
+
+.form-popup-doc {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.dong-nhap-lieu-don {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nhan-dien-o-nhap {
+  font-size: 13px;
+  font-weight: bold;
+  color: #334155;
+}
+
+.o-o-nhap-tien {
   padding: 8px;
-  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+.o-nhap-chu-nhieu-dong {
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  height: 60px;
+  resize: vertical;
+}
+
+.o-nut-bam-popup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.nut-bam-huy {
+  padding: 8px 15px;
+  background-color: #e2e8f0;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+}
+
+.nut-bam-cap-nhat {
+  padding: 8px 15px;
+  background-color: #10b981;
+  color: white;
+  border: 1px solid #10b981;
+  cursor: pointer;
+  font-weight: bold;
 }
