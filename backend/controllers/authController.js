@@ -2,29 +2,6 @@ const userModel = require("../models/userModel")
 const speakeasy = require("speakeasy")
 const qrcode = require("qrcode")
 
-// Hàm đăng ký tài khoản mới
-async function register(req, res) {
-    try {
-        const { username, password, fullname, role } = req.body
-        
-        // Kiểm tra xem đã nhập đủ các ô chưa
-        if (!username || !password || !fullname) {
-            return res.status(400).json({ success: false, message: "Vui lòng điền đủ thông tin." })
-        }
-        
-        // Tìm xem tên tài khoản này đã có ai dùng chưa
-        const existingUser = await userModel.findUserByUsername(username)
-        if (existingUser) {
-            return res.status(400).json({ success: false, message: "Tên đăng nhập đã tồn tại." })
-        }
-        
-        // Tạo tài khoản mới vào cơ sở dữ liệu
-        await userModel.createUser(username, password, fullname, role)
-        res.status(201).json({ success: true, message: "Đăng ký thành công." })
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Lỗi hệ thống." })
-    }
-}
 
 // Hàm đăng nhập hệ thống
 async function login(req, res) {
@@ -188,7 +165,6 @@ async function verify2FA(req, res) {
 }
 
 module.exports = {
-    register,
     login,
     getMe,
     logout,
